@@ -94,7 +94,7 @@
 						{/each}
 						{#if status === 'To Do'}
 							{#if newItem}
-								<form action="?/new" id="new-form" use:enhance method="post">
+								<form action="/board/?/new" id="new-form" use:enhance method="post">
 									<input
 										bind:this={newInput}
 										{...$constraints.title}

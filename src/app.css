@@ -6,6 +6,7 @@
 	--color-done: hsl(120, 100%, 60%);
 	--color-scrap: hsl(0, 100%, 67%);
 	--color-rerecord: hsl(300, 100%, 72%);
+	--color-muted: #3d3d3d;
 }
 
 @utility no-scrollbar {
