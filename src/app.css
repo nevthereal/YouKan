@@ -6,7 +6,7 @@
 	--color-done: hsl(120, 100%, 60%);
 	--color-scrap: hsl(0, 100%, 67%);
 	--color-rerecord: hsl(300, 100%, 72%);
-	--color-muted: #3d3d3d;
+	--color-muted: hsl(0, 0%, 23.9%);
 }
 
 @utility no-scrollbar {
@@ -16,4 +16,8 @@
 	/* Hide scrollbar for IE, Edge and Firefox */
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
+}
+
+.dragging {
+	@apply opacity-50;
 }

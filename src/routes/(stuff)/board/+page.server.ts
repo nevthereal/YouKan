@@ -6,6 +6,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
+import { getUser } from '$lib/utils';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { user } = await parent();
@@ -20,13 +21,16 @@ export const load: PageServerLoad = async ({ parent }) => {
 };
 
 export const actions: Actions = {
-	new: async ({ request }) => {
+	new: async ({ request, locals }) => {
+		const user = getUser(locals);
+
 		const form = await superValidate(request, zod(zNewProject));
 
 		if (!form.valid) return fail(400);
 
 		await db.insert(project).values({
-			title: form.data.title
+			title: form.data.title,
+			ownerId: user.id
 		});
 	},
 	edit: async ({ request }) => {
