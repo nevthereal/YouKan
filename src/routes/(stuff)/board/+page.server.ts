@@ -7,8 +7,11 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
 
-export const load: PageServerLoad = async () => {
-	const projects = await db.query.project.findMany();
+export const load: PageServerLoad = async ({ parent }) => {
+	const { user } = await parent();
+	const projects = await db.query.project.findMany({
+		where: eq(project.ownerId, user.id)
+	});
 
 	const newProjectForm = await superValidate(zod(zNewProject));
 	const editProjectForm = await superValidate(zod(zNewProject));

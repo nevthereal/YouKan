@@ -11,11 +11,15 @@
 	{project.title}
 </h1>
 <p class="flex items-center gap-2">
+	{@render statusBadge()}
 	{#if project.date}
 		<span>{project.date}</span>
 	{:else}
 		<span class="text-muted italic">No date set</span>
 	{/if}
+</p>
+
+{#snippet statusBadge()}
 	<span
 		class={cn(
 			'w-fit rounded-full px-2 py-1 capitalize',
@@ -32,4 +36,4 @@
 	>
 		{project.status}
 	</span>
-</p>
+{/snippet}
