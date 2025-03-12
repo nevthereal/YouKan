@@ -122,9 +122,3 @@
 		{/each}
 	</div>
 </section>
-
-<style>
-	:global(.dragging) {
-		@apply opacity-50;
-	}
-</style>
