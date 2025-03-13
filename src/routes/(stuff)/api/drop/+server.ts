@@ -1,11 +1,19 @@
 import { db } from '$lib/db';
 import { project, projectStatusEnum } from '$lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
+import { getUser } from '$lib/utils';
 
-export const POST: RequestHandler = async ({ url }) => {
+export const POST: RequestHandler = async ({ url, locals }) => {
+	const user = getUser(locals);
 	const projectId = Number(url.searchParams.get('id'));
+
+	const qProject = await db.query.project.findFirst({
+		where: and(eq(project.id, projectId), eq(project.ownerId, user.id))
+	});
+
+	if (!qProject) return error(404, 'Project not found');
 
 	if (Number.isNaN(projectId)) return error(400, 'Number not provided');
 
