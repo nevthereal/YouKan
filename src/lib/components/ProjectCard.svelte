@@ -5,7 +5,8 @@
 	import { projectStatusEnum } from '$lib/db/schema/project.sql';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import type { zNewProject } from '$lib/zod';
-	import { Sticker } from 'lucide-svelte';
+	import { Sticker, Trash2 } from 'lucide-svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	interface Props {
 		prj: Project;
@@ -28,13 +29,15 @@
 	let input = $state() as HTMLInputElement;
 </script>
 
-<button
+<div
 	ondblclick={() => {
 		edit = true;
 		setTimeout(() => {
 			input.focus();
 		}, 20);
 	}}
+	role="button"
+	tabindex="0"
 	use:draggable={{
 		disabled: edit,
 		container: status,
@@ -44,7 +47,7 @@
 				console.log(e.invalidDrop);
 			}
 		},
-		interactive: ['a']
+		interactive: ['a', 'button']
 	}}
 	in:fade={{ duration: 150 }}
 	out:fade={{ duration: 150 }}
@@ -56,12 +59,24 @@
 				<h2 class="text-xl font-bold">
 					{prj.title}
 				</h2>
-				<a
-					title="Notes"
-					aria-label="Notes"
-					href="/project/{prj.id}"
-					class="invisible group-hover:visible"><Sticker size={20} /></a
-				>
+				<div class="flex gap-1">
+					<a
+						title="Notes"
+						aria-label="Notes"
+						href="/project/{prj.id}"
+						class="invisible group-hover:visible"><Sticker size={20} /></a
+					>
+					<button
+						onclick={async () => {
+							await fetch(`/api/delete?id=${prj.id}`, {
+								method: 'POST'
+							}).then(() => invalidateAll());
+						}}
+						title="Notes"
+						aria-label="Notes"
+						class="invisible group-hover:visible hover:text-red-500"><Trash2 size={20} /></button
+					>
+				</div>
 			</div>
 		{:else}
 			<form use:enhance action="/board/?/edit" method="post">
@@ -83,4 +98,4 @@
 			</h3>
 		{/if}
 	</div>
-</button>
+</div>
