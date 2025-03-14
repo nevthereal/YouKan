@@ -72,9 +72,10 @@
 								method: 'POST'
 							}).then(() => invalidateAll());
 						}}
-						title="Notes"
-						aria-label="Notes"
-						class="invisible group-hover:visible hover:text-red-500"><Trash2 size={20} /></button
+						title="Delete"
+						aria-label="Delete"
+						class="invisible cursor-pointer group-hover:visible hover:text-red-500"
+						><Trash2 size={20} /></button
 					>
 				</div>
 			</div>
