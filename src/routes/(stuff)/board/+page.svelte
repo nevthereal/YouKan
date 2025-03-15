@@ -27,8 +27,7 @@
 
 		await fetch(`/api/drop?id=${draggedItem.id}&target=${targetContainer}`, {
 			method: 'POST'
-		});
-		invalidateAll();
+		}).then(() => invalidateAll());
 	}
 
 	let newItem = $state(false);
