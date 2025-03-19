@@ -5,8 +5,8 @@ import type { RequestHandler } from './$types';
 import { project } from '$lib/db/schema';
 import { error } from '@sveltejs/kit';
 
-export const POST: RequestHandler = async ({ locals, url }) => {
-	const user = getUser(locals);
+export const POST: RequestHandler = async ({ url }) => {
+	const user = getUser();
 
 	const projectId = Number(url.searchParams.get('id'));
 	if (Number.isNaN(projectId)) return error(400, 'Number not provided');
