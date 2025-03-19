@@ -21,8 +21,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 };
 
 export const actions: Actions = {
-	new: async ({ request, locals }) => {
-		const user = getUser(locals);
+	new: async ({ request }) => {
+		const user = getUser();
 
 		const form = await superValidate(request, zod(zNewProject));
 
