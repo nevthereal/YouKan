@@ -11,10 +11,8 @@
 
 	const { projects, editProjectForm, statusValues } = $derived(data);
 
-	const columns = $derived(statusValues);
-
 	const projectsByStatus = $derived(
-		columns.map((status) => ({
+		statusValues.map((status) => ({
 			status,
 			items: projects.filter((prj) => prj.status === status)
 		}))
