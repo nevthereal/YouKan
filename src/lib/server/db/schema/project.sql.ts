@@ -11,4 +11,5 @@ export const project = sqliteTable('project', {
 	ownerId: text().references(() => user.id, { onDelete: 'cascade' })
 });
 
+export type Status = typeof projectStatusEnum;
 export type Project = typeof project.$inferSelect;

@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { project } from '$lib/server/db/schema';
+import { project, projectStatusEnum } from '$lib/server/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms';
@@ -16,8 +16,9 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	const newProjectForm = await superValidate(zod(zNewProject));
 	const editProjectForm = await superValidate(zod(zNewProject));
+	const statusValues = projectStatusEnum;
 
-	return { projects, newProjectForm, editProjectForm };
+	return { projects, newProjectForm, editProjectForm, statusValues };
 };
 
 export const actions: Actions = {
