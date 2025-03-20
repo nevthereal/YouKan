@@ -1,5 +1,5 @@
-import { db } from '$lib/db';
-import { project, projectStatusEnum } from '$lib/db/schema';
+import { db } from '$lib/server/db';
+import { project, projectStatusEnum } from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';

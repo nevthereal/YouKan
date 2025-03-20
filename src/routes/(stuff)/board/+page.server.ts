@@ -1,5 +1,5 @@
-import { db } from '$lib/db';
-import { project } from '$lib/db/schema';
+import { db } from '$lib/server/db';
+import { project } from '$lib/server/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms';

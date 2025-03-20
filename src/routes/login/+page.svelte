@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/state';
-	import { authClient } from '$lib/auth/client';
+	import { authClient } from '$lib/auth-client';
 	import { DoorOpen } from 'lucide-svelte';
 </script>
 
