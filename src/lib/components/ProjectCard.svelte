@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { draggable } from '@thisux/sveltednd';
 	import { fade } from 'svelte/transition';
-	import { type Project } from '$lib/server/db/schema/project.sql';
-	import { type Status } from '$lib/server/db/schema/project.sql';
+	import { type Project, type Status } from '$lib/server/db/schema/project.sql';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import type { zNewProject } from '$lib/zod';
 	import { Sticker, Trash2 } from 'lucide-svelte';
