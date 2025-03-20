@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { invalidateAll } from '$app/navigation';
-	import { projectStatusEnum, type Project } from '$lib/db/schema/project.sql.js';
+	import type { Project } from '$lib/server/db/schema/project.sql.js';
 	import { droppable, type DragDropState } from '@thisux/sveltednd';
 	import { cn } from '$lib/utils';
 	import { Plus } from 'lucide-svelte';
@@ -9,13 +9,10 @@
 
 	let { data } = $props();
 
-	const { projects, editProjectForm } = $derived(data);
+	const { projects, editProjectForm, statusValues } = $derived(data);
 
-	const statusValues = projectStatusEnum;
-
-	const columns = statusValues;
 	const projectsByStatus = $derived(
-		columns.map((status) => ({
+		statusValues.map((status) => ({
 			status,
 			items: projects.filter((prj) => prj.status === status)
 		}))
