@@ -1,12 +1,12 @@
-import { db } from '$lib/db';
-import { project } from '$lib/db/schema';
+import { db } from '$lib/server/db';
+import { project, projectStatusEnum } from '$lib/server/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
-import { getUser } from '$lib/utils';
+import { getUser } from '$lib/server/utils';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { user } = await parent();
@@ -16,8 +16,9 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	const newProjectForm = await superValidate(zod(zNewProject));
 	const editProjectForm = await superValidate(zod(zNewProject));
+	const statusValues = projectStatusEnum.enumValues;
 
-	return { projects, newProjectForm, editProjectForm };
+	return { projects, newProjectForm, editProjectForm, statusValues };
 };
 
 export const actions: Actions = {

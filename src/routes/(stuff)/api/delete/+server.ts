@@ -1,8 +1,8 @@
-import { db } from '$lib/db';
-import { getUser } from '$lib/utils';
+import { db } from '$lib/server/db';
+import { getUser } from '$lib/server/utils';
 import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
-import { project } from '$lib/db/schema';
+import { project } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ url }) => {

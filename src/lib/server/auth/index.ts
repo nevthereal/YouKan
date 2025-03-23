@@ -6,7 +6,7 @@ import { multiSession } from 'better-auth/plugins';
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
-		provider: 'sqlite'
+		provider: 'pg'
 	}),
 	socialProviders: {
 		github: {
