@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { user } from './auth.sql';
 
 export const projectStatusEnum = pgEnum('status', [
@@ -10,7 +10,7 @@ export const projectStatusEnum = pgEnum('status', [
 ]);
 
 export const project = pgTable('project', {
-	id: uuid().primaryKey(),
+	id: serial().primaryKey(),
 	title: text().notNull(),
 	date: timestamp({ mode: 'date' }),
 	status: projectStatusEnum().default('To Do').notNull(),
