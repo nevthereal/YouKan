@@ -1,15 +1,23 @@
+import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { user } from './auth.sql';
-import { sqliteTable, text, int } from 'drizzle-orm/sqlite-core';
 
-export const projectStatusEnum = ['To Do', 'Re Record', 'In Progress', 'Done', 'Scrap'] as const;
+export const projectStatusEnum = pgEnum('status', [
+	'To Do',
+	'Re Record',
+	'In Progress',
+	'Done',
+	'Scrap'
+]);
 
-export const project = sqliteTable('project', {
-	id: int().primaryKey(),
+export const project = pgTable('project', {
+	id: uuid().primaryKey(),
 	title: text().notNull(),
-	date: int({ mode: 'timestamp' }),
-	status: text({ enum: projectStatusEnum }).default('To Do').notNull(),
+	date: timestamp({ mode: 'date' }),
+	status: projectStatusEnum().default('To Do').notNull(),
 	ownerId: text().references(() => user.id, { onDelete: 'cascade' })
 });
 
-export type Status = typeof projectStatusEnum;
+export const status = projectStatusEnum.enumValues;
+
+export type Status = typeof projectStatusEnum.enumValues;
 export type Project = typeof project.$inferSelect;

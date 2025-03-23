@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { getUser } from '$lib/server/auth/utils';
+import { getUser } from '$lib/server/utils';
 import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { project } from '$lib/server/db/schema';

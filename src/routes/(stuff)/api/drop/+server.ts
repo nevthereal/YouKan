@@ -3,7 +3,7 @@ import { project, projectStatusEnum } from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
-import { getUser } from '$lib/server/auth/utils';
+import { getUser } from '$lib/server/utils';
 
 export const POST: RequestHandler = async ({ url }) => {
 	const user = getUser();
@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ url }) => {
 
 	if (!qProject) return error(404, 'Project not found');
 
-	const target = url.searchParams.get('target') as (typeof projectStatusEnum)[number];
+	const target = url.searchParams.get('target') as (typeof projectStatusEnum.enumValues)[number];
 
 	await db
 		.update(project)
