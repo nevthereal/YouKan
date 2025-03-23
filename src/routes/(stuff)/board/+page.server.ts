@@ -6,7 +6,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
-import { getUser } from '$lib/utils';
+import { getUser } from '$lib/server/auth/utils';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { user } = await parent();
