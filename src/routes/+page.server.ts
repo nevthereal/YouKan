@@ -40,7 +40,9 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400);
 
-		const projectId = Number(form.id.split('-')[1]);
+		// Ensure form.id follows the expected pattern (e.g., "project-123")
+		const match = form.id?.match(/^project-(\d+)$/);
+		const projectId = match ? Number(match[1]) : NaN;
 
 		if (Number.isNaN(projectId)) return error(404);
 
