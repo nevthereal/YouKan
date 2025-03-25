@@ -79,7 +79,7 @@
 				</div>
 			</div>
 		{:else}
-			<form use:enhance action="/board/?/edit" method="post">
+			<form use:enhance action="/?/edit" method="post">
 				<input
 					bind:this={input}
 					name="title"
