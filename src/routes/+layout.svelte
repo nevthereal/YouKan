@@ -9,7 +9,7 @@
 </script>
 
 <nav class="flex items-center justify-between p-8">
-	<a href="/" class="text-5xl font-black italic">YouKan</a>
+	<a href="/" class="text-5xl font-black italic">YK</a>
 	{#if data.user}
 		<button
 			onclick={async () => {
