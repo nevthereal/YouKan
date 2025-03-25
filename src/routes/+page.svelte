@@ -36,11 +36,17 @@
 	});
 
 	$effect(() => {
-		document.addEventListener('keydown', (event) => {
+		const handleKeydown = (event) => {
 			if (event.key === 'Escape') {
 				newItem = false;
 			}
-		});
+		};
+		
+		document.addEventListener('keydown', handleKeydown);
+		
+		return () => {
+			document.removeEventListener('keydown', handleKeydown);
+		};
 	});
 
 	let newInput = $state() as HTMLInputElement;
