@@ -9,12 +9,13 @@
 </script>
 
 <nav class="flex items-center justify-between p-8">
-	<a href="/" class="text-5xl font-black italic">YK</a>
+	<a href={data.globalUser != null ? '/' : '/home'} class="text-5xl font-black italic">YK</a>
 	{#if data.globalUser}
 		<button
 			onclick={async () => {
-				await authClient(page.url.origin).signOut();
-				goto('/');
+				await authClient(page.url.origin)
+					.signOut()
+					.then(() => goto('/login'));
 			}}
 			class="flex items-center gap-2 rounded-lg border-2 p-2 text-sm font-bold"
 			><LogOut size={20} /> Sign Out</button

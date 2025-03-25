@@ -36,14 +36,14 @@
 	});
 
 	$effect(() => {
-		const handleKeydown = (event) => {
-			if (event.key === 'Escape') {
+		const handleKeydown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape' && newItem === true) {
 				newItem = false;
 			}
 		};
-		
+
 		document.addEventListener('keydown', handleKeydown);
-		
+
 		return () => {
 			document.removeEventListener('keydown', handleKeydown);
 		};
