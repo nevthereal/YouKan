@@ -9,7 +9,7 @@ import { eq } from 'drizzle-orm';
 import { getUser } from '$lib/server/utils';
 
 export const load: PageServerLoad = async () => {
-	const user = await getUser();
+	const user = getUser();
 	const projects = await db.query.project.findMany({
 		where: eq(project.ownerId, user.id)
 	});
@@ -35,6 +35,7 @@ export const actions: Actions = {
 		});
 	},
 	edit: async ({ request }) => {
+		const user = getUser();
 		const form = await superValidate(request, zod(zNewProject));
 
 		if (!form.valid) return fail(400);
@@ -42,6 +43,12 @@ export const actions: Actions = {
 		const projectId = Number(form.id.split('-')[1]);
 
 		if (Number.isNaN(projectId)) return error(404);
+
+		const record = await db.query.project.findFirst({
+			where: (fields, operators) =>
+				operators.and(operators.eq(fields.id, projectId), operators.eq(fields.ownerId, user.id))
+		});
+		if (!record) return error(404, 'Project not found or permission denied');
 
 		await db
 			.update(project)
