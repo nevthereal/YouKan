@@ -1,15 +1,15 @@
 import { db } from '$lib/server/db';
 import { project, projectStatusEnum } from '$lib/server/db/schema';
 import { error, fail } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './(stuff)/$types';
+import type { Actions, PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
 import { getUser } from '$lib/server/utils';
 
-export const load: PageServerLoad = async ({ parent }) => {
-	const { user } = await parent();
+export const load: PageServerLoad = async () => {
+	const user = await getUser();
 	const projects = await db.query.project.findMany({
 		where: eq(project.ownerId, user.id)
 	});
