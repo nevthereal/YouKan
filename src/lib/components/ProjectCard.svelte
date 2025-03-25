@@ -4,7 +4,7 @@
 	import { type Project, type Status } from '$lib/server/db/schema/project.sql';
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import type { zNewProject } from '$lib/zod';
-	import { Sticker, Trash2 } from 'lucide-svelte';
+	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
 
 	interface Props {
@@ -73,20 +73,25 @@
 						}}
 						title="Delete"
 						aria-label="Delete"
-						class="invisible cursor-pointer group-hover:visible hover:text-red-500"
-						><Trash2 size={20} /></button
+						class="invisible group-hover:visible hover:text-red-500"><Trash2 size={20} /></button
 					>
 				</div>
 			</div>
 		{:else}
-			<form use:enhance action="/?/edit" method="post">
+			<form use:enhance action="/?/edit" method="post" class="flex">
 				<input
 					bind:this={input}
 					name="title"
 					bind:value={$form.title}
-					class="w-full text-xl"
+					class="w-full text-xl outline-none"
 					type="text"
 				/>
+				<div class="flex gap-1">
+					<button type="button" class="opacity-50" onclick={() => (edit = false)}
+						><XCircle /></button
+					>
+					<button type="submit"><CheckCircle2 /></button>
+				</div>
 			</form>
 		{/if}
 		{#if prj.date}
