@@ -2,17 +2,13 @@
 	import { Calendar } from 'bits-ui';
 	import { getLocalTimeZone, today } from '@internationalized/date';
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte';
-
-	const isDateUnavailable: Calendar.RootProps['isDateUnavailable'] = (date) => {
-		return date.day === 17 || date.day === 18;
-	};
+	import { fade } from 'svelte/transition';
 
 	let value = $state(today(getLocalTimeZone()));
 </script>
 
 <Calendar.Root
-	class="border-dark-10 bg-background-alt shadow-card mt-6 rounded-[15px] border p-[22px]"
-	{isDateUnavailable}
+	class="border-dark-10 bg-background-alt shadow-card absolute left-0 mt-6 rounded-[15px] border p-[22px]"
 	weekdayFormat="short"
 	fixedWeeks={true}
 	type="single"

@@ -1,8 +1,12 @@
 <script lang="ts">
 	import Calendar from '$lib/components/Calendar.svelte';
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
+	import { cubicInOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
+
+	let calendar = $state(true);
 
 	let { project } = $derived(data);
 </script>
@@ -11,13 +15,19 @@
 	<h1 class="mb-4 text-5xl font-bold">
 		{project.title}
 	</h1>
-	<div class="flex items-center gap-4">
+	<div class="relative flex items-center gap-4">
 		<StatusBadge status={project.status} />
-		{#if project.date}
-			<p>{project.date}</p>
-		{:else}
-			<p class="text-muted italic">No date set</p>
+		<button onclick={() => (calendar = !calendar)}
+			>{#if project.date}
+				<span>{project.date}</span>
+			{:else}
+				<span class="text-muted-foreground font-mono">Set date</span>
+			{/if}
+		</button>
+		{#if calendar}
+			<div transition:fade={{ duration: 100, easing: cubicInOut }}>
+				<Calendar />
+			</div>
 		{/if}
 	</div>
-	<Calendar />
 </section>
