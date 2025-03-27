@@ -6,7 +6,7 @@
 
 	let { data } = $props();
 
-	let calendar = $state(true);
+	let calendar = $state(false);
 
 	let { project } = $derived(data);
 </script>
@@ -25,8 +25,8 @@
 			{/if}
 		</button>
 		{#if calendar}
-			<div transition:fade={{ duration: 100, easing: cubicInOut }}>
-				<Calendar />
+			<div transition:fade={{ duration: 150, easing: cubicInOut }}>
+				<Calendar formProps={data.dateForm} />
 			</div>
 		{/if}
 	</div>

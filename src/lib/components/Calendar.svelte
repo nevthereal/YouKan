@@ -2,13 +2,15 @@
 	import { Calendar } from 'bits-ui';
 	import { getLocalTimeZone, today } from '@internationalized/date';
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte';
-	import { fade } from 'svelte/transition';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import type { zSetDate } from '$lib/zod';
 
+	let { formProps }: { formProps: SuperValidated<Infer<typeof zSetDate>> } = $props();
 	let value = $state(today(getLocalTimeZone()));
 </script>
 
 <Calendar.Root
-	class="border-dark-10 bg-background-alt shadow-card absolute left-0 mt-6 rounded-[15px] border p-[22px]"
+	class="border-dark-10 bg-background-alt shadow-card left-0 mt-6 rounded-[15px] border p-[22px] md:absolute"
 	weekdayFormat="short"
 	fixedWeeks={true}
 	type="single"
