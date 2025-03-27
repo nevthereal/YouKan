@@ -1,6 +1,6 @@
 <script lang="ts">
+	import Calendar from '$lib/components/Calendar.svelte';
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
-	import { cn } from '$lib/utils';
 
 	let { data } = $props();
 
@@ -11,12 +11,13 @@
 	<h1 class="mb-4 text-5xl font-bold">
 		{project.title}
 	</h1>
-	<p class="flex items-center gap-4">
+	<div class="flex items-center gap-4">
 		<StatusBadge status={project.status} />
 		{#if project.date}
-			<span>{project.date}</span>
+			<p>{project.date}</p>
 		{:else}
-			<span class="text-muted italic">No date set</span>
+			<p class="text-muted italic">No date set</p>
 		{/if}
-	</p>
+	</div>
+	<Calendar />
 </section>
