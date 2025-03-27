@@ -101,7 +101,7 @@
 										bind:this={newInput}
 										{...$constraints.title}
 										bind:value={$form.title}
-										class="w-full rounded-2xl border-2 bg-gray-400/10 p-4 text-xl font-bold"
+										class="bg-dark/10 w-full rounded-2xl border-2 p-4 text-xl font-bold"
 										type="text"
 										name="title"
 										placeholder="New Project"
@@ -115,7 +115,7 @@
 										newInput.focus();
 									}, 20);
 								}}
-								class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 bg-gray-400/10 p-2 text-lg font-bold"
+								class="bg-dark/10 flex w-full items-center justify-center gap-2 rounded-2xl border-2 p-2 text-lg font-bold"
 								><Plus size={20} />New Item</button
 							>{/if}
 					</div>
