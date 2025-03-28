@@ -1,9 +1,23 @@
 <script lang="ts">
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
+	import { getLocalTimeZone, parseDate, today, type DateValue } from '@internationalized/date';
 	import { DatePicker } from 'bits-ui';
-	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Calendar, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
 
 	let { data } = $props();
+
+	const { form, enhance } = superForm(data.dateForm);
+
+	let value = $state<DateValue | undefined>();
+
+	$effect(() => {
+		value = today(getLocalTimeZone());
+	});
+
+	$effect(() => {
+		value = $form.date ? parseDate($form.date.toString()) : undefined;
+	});
 
 	let { project } = $derived(data);
 </script>
@@ -14,17 +28,28 @@
 	</h1>
 	<div class="relative flex items-center gap-4">
 		<StatusBadge status={project.status} />
-		<DatePicker.Root weekdayFormat="short" fixedWeeks={true} closeOnDateSelect={false}>
-			<div class="flex w-full max-w-[232px] flex-col gap-1.5">
-				<DatePicker.Trigger class="">
+		<DatePicker.Root
+			bind:value
+			onValueChange={(v) => {
+				if (v) {
+					$form.date = v.toDate(getLocalTimeZone());
+				}
+			}}
+			fixedWeeks={true}
+			closeOnDateSelect={false}
+		>
+			<div>
+				<DatePicker.Trigger>
 					{#if project.date}
 						<span>{project.date}</span>
 					{:else}
-						<span class="text-muted-foreground font-mono">Set date</span>
+						<span class="text-muted-foreground flex items-center gap-2"
+							>Set date <Calendar />
+						</span>
 					{/if}
 				</DatePicker.Trigger>
 
-				<DatePicker.Content sideOffset={6} class="z-50">
+				<DatePicker.Content sideOffset={6} class="z-50 mt-2">
 					<DatePicker.Calendar
 						class="border-dark-10 bg-background-alt shadow-popover rounded-[15px] border p-[22px]"
 					>
@@ -81,6 +106,10 @@
 									</DatePicker.Grid>
 								{/each}
 							</div>
+							<button
+								form="dateForm"
+								class="bg-dark rounded-button mt-4 w-full p-2 text-center text-white">Submit</button
+							>
 						{/snippet}
 					</DatePicker.Calendar>
 				</DatePicker.Content>
@@ -88,3 +117,7 @@
 		</DatePicker.Root>
 	</div>
 </section>
+
+<form use:enhance id="dateForm" action="?/setDate" hidden method="post">
+	<input value={$form.date} name="date" />
+</form>

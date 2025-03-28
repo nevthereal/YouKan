@@ -27,7 +27,9 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-	setDate: ({ request }) => {
-		const user = getUser();
+	setDate: async ({ request }) => {
+		const form = await superValidate(request, zod(zSetDate));
+
+		console.log(form.data);
 	}
 } satisfies Actions;
