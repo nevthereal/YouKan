@@ -1,6 +1,6 @@
 <script lang="ts">
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
-	import { getLocalTimeZone, parseDate, today, type DateValue } from '@internationalized/date';
+	import { getLocalTimeZone, parseDateTime, type DateValue } from '@internationalized/date';
 	import { DatePicker } from 'bits-ui';
 	import { Calendar, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
@@ -12,11 +12,7 @@
 	let value = $state<DateValue | undefined>();
 
 	$effect(() => {
-		value = today(getLocalTimeZone());
-	});
-
-	$effect(() => {
-		value = $form.date ? parseDate($form.date.toString()) : undefined;
+		value = $form.date ? parseDateTime($form.date.toISOString().slice(0, 19)) : undefined;
 	});
 
 	let { project } = $derived(data);
@@ -32,7 +28,9 @@
 			bind:value
 			onValueChange={(v) => {
 				if (v) {
-					$form.date = v.toDate(getLocalTimeZone());
+					const localDate = v.toDate(getLocalTimeZone());
+					const offset = localDate.getTimezoneOffset() * 60000;
+					$form.date = new Date(localDate.getTime() - offset);
 				}
 			}}
 			fixedWeeks={true}
