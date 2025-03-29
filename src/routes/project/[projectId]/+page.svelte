@@ -38,14 +38,13 @@
 			closeOnDateSelect={false}
 		>
 			<div>
-				<DatePicker.Trigger>
+				<DatePicker.Trigger class="flex items-center gap-2">
 					{#if project.date}
 						<span>{prettyDate(project.date, 'long')}</span>
 					{:else}
-						<span class="text-muted-foreground flex items-center gap-2"
-							>Set date <Calendar />
-						</span>
+						<span class="text-muted-foreground">Set date </span>
 					{/if}
+					<Calendar />
 				</DatePicker.Trigger>
 
 				<DatePicker.Content sideOffset={6} class="z-50 mt-2">
