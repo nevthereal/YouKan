@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@internationalized/date':
+        specifier: ^3.7.0
+        version: 3.7.0
       '@libsql/client':
         specifier: ^0.14.0
         version: 0.14.0

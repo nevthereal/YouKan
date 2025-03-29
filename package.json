@@ -50,6 +50,7 @@
 		"zod": "^3.24.2"
 	},
 	"dependencies": {
+		"@internationalized/date": "^3.7.0",
 		"@libsql/client": "^0.14.0",
 		"@neondatabase/serverless": "^0.10.4",
 		"@nevthereal/random-utils": "^1.0.11",

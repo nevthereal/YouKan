@@ -17,7 +17,7 @@
 					.signOut()
 					.then(() => goto('/login'));
 			}}
-			class="flex items-center gap-2 rounded-lg border-2 p-2 text-sm font-bold"
+			class="rounded-button flex items-center gap-2 border-2 p-2 text-sm font-bold"
 			><LogOut size={20} /> Sign Out</button
 		>
 	{/if}

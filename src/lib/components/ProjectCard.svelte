@@ -6,6 +6,7 @@
 	import type { zNewProject } from '$lib/zod';
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
+	import { prettyDate } from '$lib/utils';
 
 	interface Props {
 		prj: Project;
@@ -50,7 +51,7 @@
 	}}
 	in:fade={{ duration: 150 }}
 	out:fade={{ duration: 150 }}
-	class="w-full cursor-move rounded-2xl border-2 bg-gray-400/10 p-4 text-left transition-all duration-200"
+	class="bg-dark/10 rounded-card w-full cursor-move border-2 p-4 text-left transition-all duration-200"
 >
 	<div class="group flex flex-col gap-2">
 		{#if !edit}
@@ -96,10 +97,7 @@
 		{/if}
 		{#if prj.date}
 			<h3>
-				{Intl.DateTimeFormat('en', {
-					dateStyle: 'medium',
-					timeStyle: 'short'
-				}).format(prj.date)}
+				{prettyDate(prj.date, 'medium')}
 			</h3>
 		{/if}
 	</div>

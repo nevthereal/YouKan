@@ -11,6 +11,6 @@
 			callbackURL: '/'
 		});
 	}}
-	class="flex items-center gap-2 rounded-2xl border-2 p-2 text-lg font-bold"
+	class="rounded-button flex items-center gap-2 border-2 p-2 text-lg font-bold"
 	><DoorOpen /> Sign in with GitHub</button
 >
