@@ -11,7 +11,6 @@ export const POST: RequestHandler = async ({ url }) => {
 
 	const projectId = checkId(url.searchParams.get('id') || '');
 
-	if (Number.isNaN(projectId)) return error(400, 'Number not provided');
 	const qProject = await db.query.project.findFirst({
 		where: and(eq(project.id, projectId), eq(project.ownerId, user.id))
 	});
