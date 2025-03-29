@@ -4,10 +4,12 @@ import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
 import { getUser } from '$lib/server/utils';
+import { checkId } from '$lib/utils';
 
 export const POST: RequestHandler = async ({ url }) => {
 	const user = getUser();
-	const projectId = Number(url.searchParams.get('id'));
+
+	const projectId = checkId(url.searchParams.get('id') || '');
 
 	if (Number.isNaN(projectId)) return error(400, 'Number not provided');
 	const qProject = await db.query.project.findFirst({

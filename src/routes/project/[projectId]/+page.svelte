@@ -1,9 +1,10 @@
 <script lang="ts">
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
+	import { prettyDate } from '$lib/utils';
 	import { getLocalTimeZone, parseDateTime, type DateValue } from '@internationalized/date';
 	import { DatePicker } from 'bits-ui';
 	import { Calendar, ChevronLeft, ChevronRight } from 'lucide-svelte';
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 
 	let { data } = $props();
 
@@ -39,7 +40,7 @@
 			<div>
 				<DatePicker.Trigger>
 					{#if project.date}
-						<span>{project.date}</span>
+						<span>{prettyDate(project.date, 'long')}</span>
 					{:else}
 						<span class="text-muted-foreground flex items-center gap-2"
 							>Set date <Calendar />

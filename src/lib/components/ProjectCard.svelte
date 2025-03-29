@@ -6,6 +6,7 @@
 	import type { zNewProject } from '$lib/zod';
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
+	import { prettyDate } from '$lib/utils';
 
 	interface Props {
 		prj: Project;
@@ -96,10 +97,7 @@
 		{/if}
 		{#if prj.date}
 			<h3>
-				{Intl.DateTimeFormat('en', {
-					dateStyle: 'medium',
-					timeStyle: 'short'
-				}).format(prj.date)}
+				{prettyDate(prj.date, 'medium')}
 			</h3>
 		{/if}
 	</div>
