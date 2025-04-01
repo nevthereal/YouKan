@@ -5,5 +5,5 @@ export const zNewProject = z.object({
 });
 
 export const zSetDate = z.object({
-	date: z.date()
+	date: z.date().nullable()
 });

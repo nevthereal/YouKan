@@ -3,20 +3,23 @@
 	import { prettyDate } from '$lib/utils';
 	import { getLocalTimeZone, parseDateTime, type DateValue } from '@internationalized/date';
 	import { DatePicker } from 'bits-ui';
-	import { Calendar, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Calendar, ChevronLeft, ChevronRight, Trash2 } from 'lucide-svelte';
 	import { superForm } from 'sveltekit-superforms';
 
 	let { data } = $props();
-
-	const { form, enhance } = superForm(data.dateForm);
+	let { project } = $derived(data);
 
 	let value = $state<DateValue | undefined>();
+
+	let open = $state(false);
+
+	const { form, enhance, reset } = superForm(data.dateForm, {
+		onSubmit: () => (open = false)
+	});
 
 	$effect(() => {
 		value = $form.date ? parseDateTime($form.date.toISOString().slice(0, 19)) : undefined;
 	});
-
-	let { project } = $derived(data);
 </script>
 
 <section class="px-8">
@@ -36,13 +39,14 @@
 			}}
 			fixedWeeks={true}
 			closeOnDateSelect={false}
+			bind:open
 		>
 			<div>
 				<DatePicker.Trigger class="flex items-center gap-2">
 					{#if project.date}
-						<span>{prettyDate(project.date, 'long')}</span>
+						<span class="text-xl">{prettyDate(project.date, 'long')}</span>
 					{:else}
-						<span class="text-muted-foreground">Set date </span>
+						<span class="text-xl">Set date </span>
 					{/if}
 					<Calendar />
 				</DatePicker.Trigger>
@@ -104,10 +108,25 @@
 									</DatePicker.Grid>
 								{/each}
 							</div>
-							<button
-								form="dateForm"
-								class="bg-dark rounded-button mt-4 w-full p-2 text-center text-white">Submit</button
-							>
+							<div class="flex gap-2">
+								<button
+									form="dateForm"
+									class="bg-dark rounded-button mt-4 w-full p-2 text-center text-white"
+									>Submit</button
+								>
+								{#if project.date}
+									<button
+										form="dateForm"
+										class="rounded-button mt-4 bg-red-400 p-2 text-center text-white"
+										onclick={() =>
+											reset({
+												data: {
+													date: null
+												}
+											})}><Trash2 /></button
+									>
+								{/if}
+							</div>
 						{/snippet}
 					</DatePicker.Calendar>
 				</DatePicker.Content>

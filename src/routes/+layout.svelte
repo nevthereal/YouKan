@@ -22,6 +22,6 @@
 		>
 	{/if}
 </nav>
-<main class="px-8">
+<main class="px-8 pb-8">
 	{@render children()}
 </main>
