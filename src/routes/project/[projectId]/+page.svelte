@@ -14,7 +14,8 @@
 	let open = $state(false);
 
 	const { form, enhance, reset } = superForm(data.dateForm, {
-		onSubmit: () => (open = false)
+		onSubmit: () => (open = false),
+		invalidateAll: 'force'
 	});
 
 	$effect(() => {
@@ -136,5 +137,5 @@
 </section>
 
 <form use:enhance id="dateForm" action="?/setDate" hidden method="post">
-	<input value={$form.date} name="date" />
+	<input bind:value={$form.date} name="date" />
 </form>
