@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	const dateForm = await superValidate(zod(zSetDate), {
 		defaults: {
-			date: project.date || new Date()
+			date: project.date ?? new Date()
 		}
 	});
 
