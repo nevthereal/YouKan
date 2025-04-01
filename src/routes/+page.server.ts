@@ -10,7 +10,7 @@ import { getUser } from '$lib/server/utils';
 
 export const load: PageServerLoad = async () => {
 	const user = getUser();
-	const projects = await db.query.project.findMany({
+	const projects = db.query.project.findMany({
 		where: eq(project.ownerId, user.id),
 		orderBy: (fields, operators) => {
 			return operators.desc(fields.date);
