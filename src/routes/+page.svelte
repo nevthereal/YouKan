@@ -6,17 +6,37 @@
 	import { cn } from '$lib/utils';
 	import { Plus } from 'lucide-svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
+	import { type Status } from '$lib/server/db/schema/project.sql';
 
 	let { data } = $props();
+	const { editProjectForm, statusValues } = $derived(data);
 
-	const { projects: projectsPromise, editProjectForm, statusValues } = $derived(data);
+	let projectsStore = $state<Project[]>([]);
+
+	$effect(() => {
+		data.projects.then((projects) => {
+			projectsStore = projects;
+		});
+	});
 
 	async function handleDrop(state: DragDropState<Project>) {
 		const { draggedItem, targetContainer } = state;
-		if (!targetContainer) return; // Prevent self-placement
-		await fetch(`/api/drop?id=${draggedItem.id}&target=${targetContainer}`, {
-			method: 'POST'
-		}).then(() => invalidateAll());
+
+		if (!targetContainer) return;
+
+		// Optimistically update the local state
+		projectsStore = projectsStore.map((p) =>
+			p.id === draggedItem.id ? { ...p, status: targetContainer as Status[number] } : p
+		);
+
+		try {
+			await fetch(`/api/drop?id=${draggedItem.id}&target=${targetContainer}`, {
+				method: 'POST'
+			});
+		} catch (error) {
+			console.error('Failed to update project status:', error);
+			invalidateAll();
+		}
 	}
 
 	let newItem = $state(false);
@@ -50,12 +70,10 @@
 		<p>Drag and drop projects.</p>
 	</div>
 
-	{#await projectsPromise}
-		<p class="text-italic font-mono">Loading Projects</p>
-	{:then projects}
+	{#if projectsStore}
 		{@const projectsByStatus = statusValues.map((status) => ({
 			status,
-			items: projects.filter((prj) => prj.status === status)
+			items: projectsStore.filter((prj) => prj.status === status)
 		}))}
 		<div class="no-scrollbar flex gap-6 overflow-x-scroll p-2">
 			{#each projectsByStatus as { status, items: projects }}
@@ -122,7 +140,7 @@
 				</div>
 			{/each}
 		</div>
-	{:catch}
-		<p class="font-mono text-red-500 italic">Something went wrong...</p>
-	{/await}
+	{:else}
+		<p class="text-italic font-mono">Loading Projects</p>
+	{/if}
 </section>
