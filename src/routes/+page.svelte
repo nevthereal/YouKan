@@ -75,6 +75,11 @@
 	const { form, enhance, constraints } = superForm(data.newProjectForm, {
 		onSubmit: () => {
 			newItem = false;
+		},
+		onUpdated: ({ form }) => {
+			queryClient.setQueryData(['projects'], (old: Project[]) => {
+				return old.map((p) => (p.id === form.data.id ? updatedProject : p));
+			});
 		}
 	});
 

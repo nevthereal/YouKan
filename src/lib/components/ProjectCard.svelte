@@ -25,9 +25,6 @@
 		id: `edit-${prj.id}`,
 		onSubmit: () => {
 			edit = false;
-		},
-		onUpdated: () => {
-			queryClient.resetQueries({ queryKey: ['projects'] });
 		}
 	});
 
