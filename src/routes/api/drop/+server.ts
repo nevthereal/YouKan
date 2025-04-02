@@ -19,12 +19,17 @@ export const POST: RequestHandler = async ({ url }) => {
 
 	const target = url.searchParams.get('target') as (typeof projectStatusEnum.enumValues)[number];
 
-	await db
+	const [updatedProject] = await db
 		.update(project)
 		.set({
 			status: target
 		})
-		.where(eq(project.id, projectId));
+		.where(eq(project.id, projectId))
+		.returning();
 
-	return new Response();
+	return new Response(JSON.stringify(updatedProject), {
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	});
 };

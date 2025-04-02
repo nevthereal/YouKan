@@ -21,7 +21,7 @@
 	const projectsQuery = createQuery({
 		queryKey: ['projects'],
 		queryFn: async () => {
-			return await data.projects;
+			return data.projects;
 		}
 	});
 
@@ -31,13 +31,30 @@
 			const response = await fetch(`/api/drop?id=${id}&target=${target}`, {
 				method: 'POST'
 			});
-			if (!response.ok) return error(400, 'Failed to update project');
 
+			if (!response.ok) throw new Error('Failed to update project');
 			return response.json();
 		},
-		onSuccess: () => {
-			// Invalidate and refetch projects after successful mutation
-			queryClient.invalidateQueries({ queryKey: ['projects'] });
+		onMutate: async ({ id, target }) => {
+			await queryClient.cancelQueries({ queryKey: ['projects'] });
+			const previousProjects = queryClient.getQueryData(['projects']) as Project[];
+
+			const newProjects = previousProjects.map((p) =>
+				p.id.toString() === id ? { ...p, status: target } : p
+			);
+
+			queryClient.setQueryData(['projects'], newProjects);
+			return { previousProjects };
+		},
+		onSuccess: (updatedProject, variables) => {
+			queryClient.setQueryData(['projects'], (old: Project[]) => {
+				return old.map((p) => (p.id === updatedProject.id ? updatedProject : p));
+			});
+		},
+		onError: (err, variables, context) => {
+			if (context?.previousProjects) {
+				queryClient.setQueryData(['projects'], context.previousProjects);
+			}
 		}
 	});
 
@@ -46,13 +63,6 @@
 
 		if (!targetContainer) return;
 
-		// Optimistically update the cache
-		queryClient.setQueryData(['projects'], (old: Project[]) =>
-			old.map((p) =>
-				p.id === draggedItem.id ? { ...p, status: targetContainer as Status[number] } : p
-			)
-		);
-
 		try {
 			await $updateProjectMutation.mutateAsync({
 				id: draggedItem.id.toString(),
@@ -60,8 +70,6 @@
 			});
 		} catch (error) {
 			console.error('Failed to update project status:', error);
-			// Invalidate the cache to refetch the correct data
-			queryClient.invalidateQueries({ queryKey: ['projects'] });
 		}
 	}
 
