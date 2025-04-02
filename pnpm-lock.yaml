@@ -20,6 +20,9 @@ importers:
       '@nevthereal/random-utils':
         specifier: ^1.0.11
         version: 1.0.11
+      '@tanstack/svelte-query':
+        specifier: ^5.71.5
+        version: 5.71.5(svelte@5.23.2)
       '@thisux/sveltednd':
         specifier: ^0.0.20
         version: 0.0.20(svelte@5.23.2)
@@ -1183,6 +1186,14 @@ packages:
     resolution: {integrity: sha512-0wDLwCVF5V3x3b1SGXPCDcdsbDHMBe+lkFzBRaHeLvNi+nrrnZ1lA18u+OTWO8iSWU2GxUOCvlXtDuqftc1oiA==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
+
+  '@tanstack/query-core@5.71.5':
+    resolution: {integrity: sha512-XOQ5SyjCdwhxyLksGKWSL5poqyEXYPDnsrZAzJm2LgrMm4Yh6VOrfC+IFosXreDw9HNqC11YAMY3HlfHjNzuaA==}
+
+  '@tanstack/svelte-query@5.71.5':
+    resolution: {integrity: sha512-fdEh5O3+HBketifQ0VPCEbnNbyPOsIsDfVId4c5FsOqr5YyJ2HPTug6MPMfK/hU6BWIk8oCv3RQvkYt/Mi/OPw==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0
 
   '@thisux/sveltednd@0.0.12':
     resolution: {integrity: sha512-9edVcakYkoCzU6pNIwmJ6Cf+9anECod26Ue/rL3Ssf5LyuLaBLXtBx4H4U8YwQCkwtMeSGFf0OsiMpPpFjvCcg==}
@@ -3591,6 +3602,13 @@ snapshots:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 4.0.8
+
+  '@tanstack/query-core@5.71.5': {}
+
+  '@tanstack/svelte-query@5.71.5(svelte@5.23.2)':
+    dependencies:
+      '@tanstack/query-core': 5.71.5
+      svelte: 5.23.2
 
   '@thisux/sveltednd@0.0.12(svelte@5.23.2)':
     dependencies:

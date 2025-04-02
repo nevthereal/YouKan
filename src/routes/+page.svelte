@@ -7,16 +7,38 @@
 	import { Plus } from 'lucide-svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import { type Status } from '$lib/server/db/schema/project.sql';
+	import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { error } from '@sveltejs/kit';
 
 	let { data } = $props();
+
 	const { editProjectForm, statusValues } = $derived(data);
+	let newItem = $state(false);
 
-	let projectsStore = $state<Project[]>([]);
+	const queryClient = useQueryClient();
 
-	$effect(() => {
-		data.projects.then((projects) => {
-			projectsStore = projects;
-		});
+	// Replace the projects store with a query
+	const projectsQuery = createQuery({
+		queryKey: ['projects'],
+		queryFn: async () => {
+			return await data.projects;
+		}
+	});
+
+	// Create a mutation for updating project status
+	const updateProjectMutation = createMutation({
+		mutationFn: async ({ id, target }: { id: string; target: Status[number] }) => {
+			const response = await fetch(`/api/drop?id=${id}&target=${target}`, {
+				method: 'POST'
+			});
+			if (!response.ok) return error(400, 'Failed to update project');
+
+			return response.json();
+		},
+		onSuccess: () => {
+			// Invalidate and refetch projects after successful mutation
+			queryClient.invalidateQueries({ queryKey: ['projects'] });
+		}
 	});
 
 	async function handleDrop(state: DragDropState<Project>) {
@@ -24,22 +46,24 @@
 
 		if (!targetContainer) return;
 
-		// Optimistically update the local state
-		projectsStore = projectsStore.map((p) =>
-			p.id === draggedItem.id ? { ...p, status: targetContainer as Status[number] } : p
+		// Optimistically update the cache
+		queryClient.setQueryData(['projects'], (old: Project[]) =>
+			old.map((p) =>
+				p.id === draggedItem.id ? { ...p, status: targetContainer as Status[number] } : p
+			)
 		);
 
 		try {
-			await fetch(`/api/drop?id=${draggedItem.id}&target=${targetContainer}`, {
-				method: 'POST'
+			await $updateProjectMutation.mutateAsync({
+				id: draggedItem.id.toString(),
+				target: targetContainer as Status[number]
 			});
 		} catch (error) {
 			console.error('Failed to update project status:', error);
-			invalidateAll();
+			// Invalidate the cache to refetch the correct data
+			queryClient.invalidateQueries({ queryKey: ['projects'] });
 		}
 	}
-
-	let newItem = $state(false);
 
 	const { form, enhance, constraints } = superForm(data.newProjectForm, {
 		onSubmit: () => {
@@ -70,10 +94,14 @@
 		<p>Drag and drop projects.</p>
 	</div>
 
-	{#if projectsStore}
+	{#if $projectsQuery.isPending}
+		<p class="text-italic font-mono">Loading Projects</p>
+	{:else if $projectsQuery.error}
+		<p class="text-error">Error: {$projectsQuery.error.message}</p>
+	{:else}
 		{@const projectsByStatus = statusValues.map((status) => ({
 			status,
-			items: projectsStore.filter((prj) => prj.status === status)
+			items: $projectsQuery.data.filter((prj) => prj.status === status)
 		}))}
 		<div class="no-scrollbar flex gap-6 overflow-x-scroll p-2">
 			{#each projectsByStatus as { status, items: projects }}
@@ -140,7 +168,5 @@
 				</div>
 			{/each}
 		</div>
-	{:else}
-		<p class="text-italic font-mono">Loading Projects</p>
 	{/if}
 </section>

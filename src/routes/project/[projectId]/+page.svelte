@@ -118,7 +118,7 @@
 								{#if project.date}
 									<button
 										form="dateForm"
-										class="rounded-button mt-4 bg-red-400 p-2 text-center text-white"
+										class="rounded-button bg-error mt-4 p-2 text-center text-white"
 										onclick={() =>
 											reset({
 												data: {

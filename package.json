@@ -54,6 +54,7 @@
 		"@libsql/client": "^0.14.0",
 		"@neondatabase/serverless": "^0.10.4",
 		"@nevthereal/random-utils": "^1.0.11",
+		"@tanstack/svelte-query": "^5.71.5",
 		"@thisux/sveltednd": "^0.0.20",
 		"better-auth": "^1.2.1",
 		"dotenv": "^16.4.7",

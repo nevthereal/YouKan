@@ -74,7 +74,7 @@
 						}}
 						title="Delete"
 						aria-label="Delete"
-						class="invisible group-hover:visible hover:text-red-500"><Trash2 size={20} /></button
+						class="hover:text-error invisible group-hover:visible"><Trash2 size={20} /></button
 					>
 				</div>
 			</div>
