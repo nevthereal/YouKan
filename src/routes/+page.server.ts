@@ -7,6 +7,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
 import { getUser } from '$lib/server/utils';
+import { useQueryClient } from '@tanstack/svelte-query';
 
 export const load: PageServerLoad = async () => {
 	const user = getUser();
@@ -32,10 +33,14 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400);
 
+		const queryClient = useQueryClient();
+
 		await db.insert(project).values({
 			title: form.data.title,
 			ownerId: user.id
 		});
+
+		queryClient.invalidateQueries({ queryKey: ['projects'] });
 	},
 	edit: async ({ request }) => {
 		const user = getUser();

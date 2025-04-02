@@ -8,7 +8,6 @@
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import { type Status } from '$lib/server/db/schema/project.sql';
 	import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
-	import { error } from '@sveltejs/kit';
 
 	let { data } = $props();
 

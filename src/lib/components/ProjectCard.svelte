@@ -7,6 +7,7 @@
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { prettyDate } from '$lib/utils';
+	import { useQueryClient } from '@tanstack/svelte-query';
 
 	interface Props {
 		prj: Project;
@@ -15,12 +16,18 @@
 	}
 
 	let { prj, status, editForm }: Props = $props();
+
+	const queryClient = useQueryClient();
+
 	let edit = $state(false);
 
 	const { form, enhance } = superForm(editForm, {
 		id: `edit-${prj.id}`,
 		onSubmit: () => {
 			edit = false;
+		},
+		onUpdated: () => {
+			queryClient.resetQueries({ queryKey: ['projects'] });
 		}
 	});
 
