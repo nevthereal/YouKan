@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { invalidateAll } from '$app/navigation';
+	import { superForm, type FormResult } from 'sveltekit-superforms';
 	import type { Project } from '$lib/server/db/schema/project.sql.js';
 	import { droppable, type DragDropState } from '@thisux/sveltednd';
 	import { cn } from '$lib/utils';
@@ -8,6 +7,7 @@
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import { type Status } from '$lib/server/db/schema/project.sql';
 	import { createQuery, createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import type { ActionData } from './$types';
 
 	let { data } = $props();
 
@@ -76,10 +76,17 @@
 		onSubmit: () => {
 			newItem = false;
 		},
-		onUpdated: ({ form }) => {
-			queryClient.setQueryData(['projects'], (old: Project[]) => {
-				return old.map((p) => (p.id === form.data.id ? updatedProject : p));
-			});
+		onUpdate: ({ result }) => {
+			if (result.type === 'success') {
+				console.log('success');
+				const { updatedProject } = result.data as FormResult<ActionData>;
+				if (updatedProject) {
+					console.log('have project');
+					queryClient.setQueryData(['projects'], (old: Project[]) => {
+						return old.map((p) => (p.id === updatedProject.id ? updatedProject : p));
+					});
+				}
+			}
 		}
 	});
 

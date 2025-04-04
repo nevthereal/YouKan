@@ -36,6 +36,8 @@ export const actions: Actions = {
 			title: form.data.title,
 			ownerId: user.id
 		});
+
+		return { form };
 	},
 	edit: async ({ request }) => {
 		const user = getUser();
@@ -52,13 +54,17 @@ export const actions: Actions = {
 			where: (fields, operators) =>
 				operators.and(operators.eq(fields.id, projectId), operators.eq(fields.ownerId, user.id))
 		});
+
 		if (!record) return error(404, 'Project not found or permission denied');
 
-		await db
+		const [updatedProject] = await db
 			.update(project)
 			.set({
 				title: form.data.title
 			})
-			.where(eq(project.id, projectId));
+			.where(eq(project.id, projectId))
+			.returning();
+
+		return { form, updatedProject };
 	}
 };
