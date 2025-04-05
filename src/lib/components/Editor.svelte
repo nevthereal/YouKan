@@ -39,4 +39,4 @@
 	};
 </script>
 
-<div use:editor class="prose border-border-input rounded-input mt-4 border p-4"></div>
+<div use:editor class="prose border-border-input rounded-input border p-4"></div>

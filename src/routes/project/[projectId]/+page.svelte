@@ -32,6 +32,7 @@
 		<StatusBadge status={project.status} />
 		{@render datePicker()}
 	</div>
+	<h1 class="mt-8 mb-2 text-xl font-bold">Notes</h1>
 	<Editor content={JSON.stringify(project.note?.content ?? '')} projectId={project.id} />
 </section>
 
