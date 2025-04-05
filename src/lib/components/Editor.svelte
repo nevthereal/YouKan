@@ -2,10 +2,10 @@
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import type { Action } from 'svelte/action';
-	import { PersistedState } from 'runed';
 
-	const content = new PersistedState('content', 'Type content here');
+	interface Props {}
 
+	let { content } = $props();
 	let editorState = $state() as Editor;
 
 	const editor: Action = (node) => {
@@ -15,7 +15,7 @@
 			editorState = new Editor({
 				element: node,
 				extensions: [StarterKit],
-				content: content.current,
+				content: '<h1>Hi there</h1>',
 				onTransaction: () => {
 					// force re-render so `editor.isActive` works as expected
 					editorState = editorState;
@@ -23,6 +23,7 @@
 			});
 
 			return () => {
+				console.log(editorState.getJSON());
 				editorState.destroy();
 			};
 		});

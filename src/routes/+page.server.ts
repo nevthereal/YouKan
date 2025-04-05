@@ -11,9 +11,12 @@ import { getUser } from '$lib/server/utils';
 export const load: PageServerLoad = async () => {
 	const user = getUser();
 	const projects = db.query.project.findMany({
-		where: eq(project.ownerId, user.id),
-		orderBy: (fields, operators) => {
-			return operators.desc(fields.date);
+		where: {
+			ownerId: user.id
+		},
+		orderBy: {
+			date: 'desc',
+			title: 'asc'
 		}
 	});
 
@@ -46,11 +49,11 @@ export const actions: Actions = {
 		const match = form.id?.match(/^edit-(\d+)$/);
 		const projectId = match ? Number(match[1]) : NaN;
 
-		if (Number.isNaN(projectId)) return error(404);
-
 		const record = await db.query.project.findFirst({
-			where: (fields, operators) =>
-				operators.and(operators.eq(fields.id, projectId), operators.eq(fields.ownerId, user.id))
+			where: {
+				ownerId: user.id,
+				id: projectId
+			}
 		});
 		if (!record) return error(404, 'Project not found or permission denied');
 
