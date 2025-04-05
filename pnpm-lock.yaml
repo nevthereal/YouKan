@@ -44,6 +44,9 @@ importers:
       lucide-svelte:
         specifier: ^0.475.0
         version: 0.475.0(svelte@5.23.2)
+      runed:
+        specifier: ^0.25.0
+        version: 0.25.0(svelte@5.23.2)
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
@@ -2769,6 +2772,11 @@ packages:
 
   runed@0.23.4:
     resolution: {integrity: sha512-9q8oUiBYeXIDLWNK5DfCWlkL0EW3oGbk845VdKlPeia28l751VpfesaB/+7pI6rnbx1I6rqoZ2fZxptOJLxILA==}
+    peerDependencies:
+      svelte: ^5.7.0
+
+  runed@0.25.0:
+    resolution: {integrity: sha512-7+ma4AG9FT2sWQEA0Egf6mb7PBT2vHyuHail1ie8ropfSjvZGtEAx8YTmUjv/APCsdRRxEVvArNjALk9zFSOrg==}
     peerDependencies:
       svelte: ^5.7.0
 
@@ -5501,6 +5509,11 @@ snapshots:
       queue-microtask: 1.2.3
 
   runed@0.23.4(svelte@5.23.2):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.23.2
+
+  runed@0.25.0(svelte@5.23.2):
     dependencies:
       esm-env: 1.2.2
       svelte: 5.23.2
