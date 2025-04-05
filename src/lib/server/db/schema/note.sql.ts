@@ -1,8 +1,13 @@
-import { integer, json, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { integer, json, pgTable, text } from 'drizzle-orm/pg-core';
 import { project } from './project.sql';
+import { generateCode } from '@nevthereal/random-utils';
 
 export const note = pgTable('notes', {
-	id: uuid().primaryKey(),
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => generateCode(10)),
 	content: json(),
-	project: integer().references(() => project.id, { onDelete: 'cascade' })
+	project: integer()
+		.references(() => project.id, { onDelete: 'cascade' })
+		.notNull()
 });

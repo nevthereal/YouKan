@@ -32,7 +32,7 @@
 		<StatusBadge status={project.status} />
 		{@render datePicker()}
 	</div>
-	<Editor />
+	<Editor content={JSON.stringify(project.note?.content ?? '')} projectId={project.id} />
 </section>
 
 <form use:enhance id="dateForm" action="?/setDate" hidden method="post">

@@ -3,9 +3,12 @@
 	import StarterKit from '@tiptap/starter-kit';
 	import type { Action } from 'svelte/action';
 
-	interface Props {}
+	interface Props {
+		content: string;
+		projectId: number;
+	}
 
-	let { content } = $props();
+	let { content, projectId }: Props = $props();
 	let editorState = $state() as Editor;
 
 	const editor: Action = (node) => {
@@ -15,7 +18,7 @@
 			editorState = new Editor({
 				element: node,
 				extensions: [StarterKit],
-				content: '<h1>Hi there</h1>',
+				content: JSON.parse(content),
 				onTransaction: () => {
 					// force re-render so `editor.isActive` works as expected
 					editorState = editorState;
@@ -23,7 +26,13 @@
 			});
 
 			return () => {
-				console.log(editorState.getJSON());
+				fetch(`api/notes/?id=${projectId}`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(editorState.getJSON())
+				});
 				editorState.destroy();
 			};
 		});
