@@ -15,8 +15,12 @@ export const load: PageServerLoad = async ({ params }) => {
 	const id = checkId(params.projectId);
 
 	const project = await db.query.project.findFirst({
-		where: (fields, operators) => {
-			return operators.and(operators.eq(fields.id, id), operators.eq(fields.ownerId, user.id));
+		where: {
+			ownerId: user.id,
+			id
+		},
+		with: {
+			note: true
 		}
 	});
 
@@ -38,8 +42,9 @@ export const actions = {
 		const id = checkId(params.projectId);
 
 		const qProject = await db.query.project.findFirst({
-			where: (fields, operators) => {
-				return operators.and(operators.eq(fields.id, id), operators.eq(fields.ownerId, user.id));
+			where: {
+				ownerId: user.id,
+				id
 			}
 		});
 
