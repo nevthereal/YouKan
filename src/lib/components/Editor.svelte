@@ -18,7 +18,14 @@
 			editorState = new Editor({
 				element: node,
 				extensions: [StarterKit],
-				content: JSON.parse(content),
+				content: content ? (() => {
+					try {
+						return JSON.parse(content);
+					} catch (e) {
+						console.error('Failed to parse editor content:', e);
+						return {}; // Fallback to empty content
+					}
+				})() : {},
 				onTransaction: () => {
 					// force re-render so `editor.isActive` works as expected
 					editorState = editorState;
