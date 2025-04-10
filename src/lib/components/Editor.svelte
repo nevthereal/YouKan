@@ -25,7 +25,7 @@
 			});
 	};
 
-	let saveTimeout: NodeJS.Timeout;
+	let saveTimeout: ReturnType<typeof setTimeout>;
 	const SAVE_DELAY = 1000; // 1 second delay
 
 	const debouncedSave = () => {
