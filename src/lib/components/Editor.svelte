@@ -18,7 +18,11 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(editorState.getJSON())
-		});
+		})
+			.catch(error => {
+				console.error('Failed to save note:', error);
+				// Consider adding user notification here
+			});
 	};
 
 	let saveTimeout: NodeJS.Timeout;
