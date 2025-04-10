@@ -65,8 +65,15 @@
 
 			return () => {
 				editorState.destroy();
-				if (editorState.isEmpty) return;
-				saveNote();
+return () => {
+	editorState.destroy();
+	if (editorState.isEmpty) return;
+	try {
+		saveNote();
+	} catch (e) {
+		console.error('Failed to save note during cleanup:', e);
+	}
+};
 			};
 		});
 	};
