@@ -21,9 +21,19 @@
 		});
 	};
 
-	// $effect(() => {
-	// 	setInterval(saveNote, 5000);
-	// });
+	let saveTimeout: NodeJS.Timeout;
+	const SAVE_DELAY = 1000; // 1 second delay
+
+	const debouncedSave = () => {
+		clearTimeout(saveTimeout);
+		saveTimeout = setTimeout(saveNote, SAVE_DELAY);
+	};
+
+	$effect(() => {
+		return () => {
+			clearTimeout(saveTimeout);
+		};
+	});
 
 	const editor: Action = (node) => {
 		// the node has been mounted in the DOM
@@ -45,11 +55,13 @@
 				onTransaction: () => {
 					// force re-render so `editor.isActive` works as expected
 					editorState = editorState;
+					debouncedSave();
 				}
 			});
 
 			return () => {
 				editorState.destroy();
+				if (editorState.isEmpty) return;
 				saveNote();
 			};
 		});
