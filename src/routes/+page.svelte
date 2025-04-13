@@ -6,29 +6,15 @@
 	import { cn } from '$lib/utils';
 	import { Plus } from 'lucide-svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
-	import { type Status } from '$lib/server/db/schema/project.sql';
+	import { type ProjectStatus as Status } from '$lib/server/db/schema/project.sql';
 
 	let { data } = $props();
-	const { editProjectForm, statusValues } = $derived(data);
-
-	let projectsStore = $state<Project[]>([]);
-
-	$effect(() => {
-		data.projects.then((projects) => {
-			projectsStore = projects;
-		});
-	});
+	const { editProjectForm, statusValues, projects } = $derived(data);
 
 	async function handleDrop(state: DragDropState<Project>) {
 		const { draggedItem, targetContainer } = state;
 
 		if (!targetContainer) return;
-
-		// Optimistically update the local state
-		projectsStore = projectsStore.map((p) =>
-			p.id === draggedItem.id ? { ...p, status: targetContainer as Status[number] } : p
-		);
-
 		try {
 			await fetch(`/api/drop?id=${draggedItem.id}&target=${targetContainer}`, {
 				method: 'POST'
@@ -70,7 +56,6 @@
 		<p>Drag and drop projects.</p>
 	</div>
 
-	{#if projectsStore}
 		{@const projectsByStatus = statusValues.map((status) => ({
 			status,
 			items: projectsStore.filter((prj) => prj.status === status)
