@@ -17,3 +17,5 @@ export function checkId(id: string | number) {
 export function prettyDate(date: Date, format: 'long' | 'medium') {
 	return Intl.DateTimeFormat('en', { dateStyle: format }).format(date);
 }
+
+export const STATUS_VALUES = ['To Do', 'Re Record', 'In Progress', 'Done', 'Scrap'] as const;

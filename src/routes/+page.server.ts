@@ -6,15 +6,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { zNewProject } from '$lib/zod';
 import { eq } from 'drizzle-orm';
-import { getUser } from '$lib/server/utils';
-
-export const load: PageServerLoad = async () => {
-	const newProjectForm = await superValidate(zod(zNewProject));
-	const editProjectForm = await superValidate(zod(zNewProject));
-	const statusValues = projectStatusEnum.enumValues;
-
-	return { newProjectForm, editProjectForm, statusValues };
-};
+import { getUser } from '$lib/server/server-utils';
 
 export const actions: Actions = {
 	new: async ({ request }) => {

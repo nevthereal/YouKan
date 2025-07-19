@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { getUser } from '$lib/server/utils';
+import { getUser } from '$lib/server/server-utils';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { zSetDate } from '$lib/zod';

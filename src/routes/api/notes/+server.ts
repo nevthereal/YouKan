@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { note } from '$lib/server/db/schema';
-import { getProject, getUser } from '$lib/server/utils';
+import { getProject, getUser } from '$lib/server/server-utils';
 import { eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 

@@ -3,14 +3,12 @@
 	import { invalidateAll } from '$app/navigation';
 	import type { Project } from '$lib/server/db/schema/project.sql.js';
 	import { droppable, type DragDropState, type DragDropAttributes } from '@thisux/sveltednd';
-	import { cn } from '$lib/utils';
+	import { cn, STATUS_VALUES } from '$lib/utils';
 	import { Plus } from 'lucide-svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import { type Status } from '$lib/server/db/schema/project.sql';
-	import { drop, getTasks } from './tasks.remote.js';
-
-	let { data } = $props();
-	const { editProjectForm, statusValues } = $derived(data);
+	import { drop, getProjects, newProject } from '$lib/projects.remote.js';
+	import z from 'zod';
 
 	async function handleDrop(state: DragDropState<Project>) {
 		const { draggedItem, targetContainer } = state;
@@ -18,21 +16,15 @@
 		if (!targetContainer) return;
 
 		drop({ id: draggedItem.id, target: targetContainer }).updates(
-			getTasks().withOverride((tasks) =>
-				tasks.map((task) =>
-					task.id === draggedItem.id ? { ...task, status: targetContainer as Status[number] } : task
+			getProjects().withOverride((projects) =>
+				projects.map((proj) =>
+					proj.id === draggedItem.id ? { ...proj, status: targetContainer as Status[number] } : proj
 				)
 			)
 		);
 	}
 
 	let newItem = $state(false);
-
-	const { form, enhance, constraints } = superForm(data.newProjectForm, {
-		onSubmit: () => {
-			newItem = false;
-		}
-	});
 
 	$effect(() => {
 		const handleKeydown = (event: KeyboardEvent) => {
@@ -57,15 +49,15 @@
 		<p>Drag and drop projects.</p>
 	</div>
 	<svelte:boundary>
-		{#await getTasks()}
+		{#await getProjects()}
 			<p>Loading</p>
-		{:then tasks}
-			{@const tasksByStatus = statusValues.map((status) => ({
+		{:then projects}
+			{@const projectsByStatus = STATUS_VALUES.map((status) => ({
 				status,
-				items: tasks.filter((prj) => prj.status === status)
+				items: projects.filter((prj) => prj.status === status)
 			}))}
 			<div class="no-scrollbar flex gap-6 overflow-x-scroll p-2">
-				{#each tasksByStatus as { status, items: projects }}
+				{#each projectsByStatus as { status, items: projects }}
 					<div class="w-80 flex-none">
 						<div
 							class={cn(
@@ -81,9 +73,7 @@
 												: 'bg-scrap/35'
 							)}
 							use:droppable={{
-								// The container is the status of the task. e.g. 'todo', 'in-progress', 'done'
 								container: status,
-								// When a task is dropped, the handleDrop function is called to update the task's status
 								callbacks: { onDrop: handleDrop }
 							}}
 						>
@@ -98,15 +88,19 @@
 
 							<div class="space-y-3">
 								{#each projects as prj (prj.id)}
-									<ProjectCard editForm={editProjectForm} {prj} {status} />
+									<ProjectCard {prj} {status} />
 								{/each}
 								{#if status === 'To Do'}
 									{#if newItem}
-										<form action="/?/new" id="new-form" use:enhance method="post">
+										<form
+											{...newProject.enhance(async ({ submit }) => {
+												submit().updates(getProjects());
+
+												newItem = false;
+											})}
+										>
 											<input
 												bind:this={newInput}
-												{...$constraints.title}
-												bind:value={$form.title}
 												class="bg-dark/10 rounded-card w-full border-2 p-4 text-xl font-bold"
 												type="text"
 												name="title"

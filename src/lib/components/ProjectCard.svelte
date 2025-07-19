@@ -5,26 +5,16 @@
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import type { zNewProject } from '$lib/zod';
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
-	import { invalidateAll } from '$app/navigation';
 	import { prettyDate } from '$lib/utils';
+	import { deleteProject, getProjects } from '$lib/projects.remote';
 
 	interface Props {
 		prj: Project;
 		status: Status[number];
-		editForm: SuperValidated<Infer<typeof zNewProject>>;
 	}
 
-	let { prj, status, editForm }: Props = $props();
+	let { prj, status }: Props = $props();
 	let edit = $state(false);
-
-	const { form, enhance } = superForm(editForm, {
-		id: `edit-${prj.id}`,
-		onSubmit: () => {
-			edit = false;
-		}
-	});
-
-	$form.title = prj.title;
 
 	let input = $state() as HTMLInputElement;
 </script>
@@ -68,9 +58,7 @@
 					>
 					<button
 						onclick={async () => {
-							await fetch(`/api/delete?id=${prj.id}`, {
-								method: 'POST'
-							}).then(() => invalidateAll());
+							await deleteProject(prj.id).updates(getProjects());
 						}}
 						title="Delete"
 						aria-label="Delete"
@@ -79,7 +67,7 @@
 				</div>
 			</div>
 		{:else}
-			<form use:enhance action="/?/edit" method="post" class="flex">
+			<!-- <form use:enhance action="/?/edit" method="post" class="flex">
 				<input
 					bind:this={input}
 					name="title"
@@ -93,7 +81,7 @@
 					>
 					<button type="submit"><CheckCircle2 /></button>
 				</div>
-			</form>
+			</form> -->
 		{/if}
 		{#if prj.date}
 			<h3>
