@@ -9,22 +9,11 @@ import { eq } from 'drizzle-orm';
 import { getUser } from '$lib/server/utils';
 
 export const load: PageServerLoad = async () => {
-	const user = getUser();
-	const projects = db.query.project.findMany({
-		where: {
-			ownerId: user.id
-		},
-		orderBy: {
-			date: 'desc',
-			title: 'asc'
-		}
-	});
-
 	const newProjectForm = await superValidate(zod(zNewProject));
 	const editProjectForm = await superValidate(zod(zNewProject));
 	const statusValues = projectStatusEnum.enumValues;
 
-	return { projects, newProjectForm, editProjectForm, statusValues };
+	return { newProjectForm, editProjectForm, statusValues };
 };
 
 export const actions: Actions = {
