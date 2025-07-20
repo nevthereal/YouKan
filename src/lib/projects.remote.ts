@@ -3,7 +3,7 @@ import { db } from '$lib/server/db';
 import { project, projectStatusEnum } from '$lib/server/db/schema';
 import { getUser } from '$lib/server/server-utils';
 import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { zEditProject, zNewProject } from './zod';
 
@@ -40,10 +40,10 @@ export const statusVals = query(async () => {
 	return projectStatusEnum.enumValues;
 });
 
-export const newProject = form(async (data: FormData) => {
+export const newProject = form(async (formData) => {
 	const user = getUser();
 	const values = {
-		title: data.get('title')
+		title: formData.get('title')
 	};
 	const result = zNewProject.safeParse(values);
 
@@ -55,15 +55,17 @@ export const newProject = form(async (data: FormData) => {
 		title: title,
 		ownerId: user.id
 	});
+
+	return { success: true };
 });
 
-export const editProject = form(async (data: FormData) => {
+export const editProject = form(async (formData) => {
 	const user = getUser();
 
 	// check values
 	const values = {
-		projectId: Number(data.get('id')),
-		title: data.get('title')
+		projectId: Number(formData.get('id')),
+		title: formData.get('title')
 	};
 	const result = zEditProject.safeParse(values);
 
@@ -79,7 +81,7 @@ export const editProject = form(async (data: FormData) => {
 		}
 	});
 
-	if (!record) return error(404, 'Project not found or permission denied');
+	if (!record) return { success: false, error: 'Project not found or permission denied' };
 
 	await db
 		.update(project)
@@ -87,14 +89,38 @@ export const editProject = form(async (data: FormData) => {
 			title
 		})
 		.where(eq(project.id, projectId));
+	return { success: true };
+});
+
+export const updateDate = command(
+	z.object({ projectId: z.number(), newDate: z.date() }),
+	async ({ newDate, projectId }) => {
+		await db
+			.update(project)
+			.set({
+				date: newDate
+			})
+			.where(eq(project.id, projectId));
+
+		return { success: true };
+	}
+);
+
+export const clearDate = command(z.number(), async (projectId) => {
+	const user = getUser();
+
+	await db
+		.update(project)
+		.set({
+			date: null
+		})
+		.where(and(eq(project.id, projectId), eq(project.ownerId, user.id)));
 });
 
 export const drop = command(
 	z.object({ id: z.number(), target: z.enum(projectStatusEnum.enumValues) }),
 	async ({ id, target }) => {
 		const user = getUser();
-
-		if (!id) return error(404, 'Does not exist');
 
 		const qProject = await db.query.project.findFirst({
 			where: {
