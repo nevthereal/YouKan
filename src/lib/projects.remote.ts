@@ -5,6 +5,7 @@ import { getUser } from '$lib/server/server-utils';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { zEditProject, zNewProject } from './zod';
 
 export const getProjects = query(async () => {
 	const user = getUser();
@@ -26,18 +27,51 @@ export const statusVals = query(async () => {
 });
 
 export const newProject = form(async (data: FormData) => {
-	const fd = Object.fromEntries(data.entries());
-
-	const parsed = z.object({ title: z.string().min(3) }).safeParse(fd);
-
-	if (parsed.error) return { error: parsed.error };
-
 	const user = getUser();
+	const values = {
+		title: data.get('title')
+	};
+	const result = zNewProject.safeParse(values);
+
+	if (!result.success) return { errors: result.error.flatten().fieldErrors };
+
+	const { title } = result.data;
 
 	await db.insert(project).values({
-		title: parsed.data.title,
+		title: title,
 		ownerId: user.id
 	});
+});
+
+export const editProject = form(async (data: FormData) => {
+	const user = getUser();
+
+	// check values
+	const values = {
+		projectId: data.get('id'),
+		title: data.get('title')
+	};
+	const result = zEditProject.safeParse(values);
+	if (!result.success) return { errors: result.error.flatten().fieldErrors };
+
+	const { title, projectId } = result.data;
+
+	// query db to check if record exists
+	const record = await db.query.project.findFirst({
+		where: {
+			ownerId: user.id,
+			id: projectId
+		}
+	});
+
+	if (!record) return error(404, 'Project not found or permission denied');
+
+	await db
+		.update(project)
+		.set({
+			title
+		})
+		.where(eq(project.id, projectId));
 });
 
 export const drop = command(

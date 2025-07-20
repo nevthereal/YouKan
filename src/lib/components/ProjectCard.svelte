@@ -6,7 +6,7 @@
 	import type { zNewProject } from '$lib/zod';
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { prettyDate } from '$lib/utils';
-	import { deleteProject, getProjects } from '$lib/projects.remote';
+	import { deleteProject, editProject, getProjects } from '$lib/projects.remote';
 
 	interface Props {
 		prj: Project;
@@ -67,21 +67,27 @@
 				</div>
 			</div>
 		{:else}
-			<!-- <form use:enhance action="/?/edit" method="post" class="flex">
+			<form
+				{...editProject.enhance(async ({ submit }) => {
+					submit();
+				})}
+				class="flex"
+			>
 				<input
+					defaultValue={prj.title}
 					bind:this={input}
 					name="title"
-					bind:value={$form.title}
 					class="w-full text-xl outline-none"
 					type="text"
 				/>
+				<input type="hidden" value={prj.id} name="id" />
 				<div class="flex gap-1">
 					<button type="button" class="opacity-50" onclick={() => (edit = false)}
 						><XCircle /></button
 					>
 					<button type="submit"><CheckCircle2 /></button>
 				</div>
-			</form> -->
+			</form>
 		{/if}
 		{#if prj.date}
 			<h3>
