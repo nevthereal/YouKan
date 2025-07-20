@@ -6,35 +6,28 @@
 	import { DatePicker } from 'bits-ui';
 	import { Calendar, ChevronLeft, ChevronRight, Trash2 } from 'lucide-svelte';
 	import { superForm } from 'sveltekit-superforms';
+	import { getProject } from '$lib/projects.remote';
 
 	let { data } = $props();
-	let { project } = $derived(data);
-
-	let value = $state<DateValue | undefined>();
-
-	let open = $state(false);
-
-	const { form, enhance, reset } = superForm(data.dateForm, {
-		onSubmit: () => (open = false),
-		invalidateAll: 'force'
-	});
-
-	$effect(() => {
-		value = $form.date ? parseDateTime($form.date.toISOString().slice(0, 19)) : undefined;
-	});
 </script>
 
-<section class="px-8">
-	<h1 class="mb-4 text-5xl font-bold">
-		{project.title}
-	</h1>
-	<div class="relative flex items-center gap-4">
-		<StatusBadge status={project.status} />
-		{@render datePicker()}
-	</div>
-	<h1 class="mt-8 mb-2 text-xl font-bold">Notes</h1>
-	<Editor content={JSON.stringify(project.note?.content ?? '')} projectId={project.id} />
-</section>
+{#await getProject(Number(data.projectId))}
+	<p>Loading...</p>
+{:then project}
+	{#if project}
+		<section class="px-8">
+			<h1 class="mb-4 text-5xl font-bold">
+				{project.title}
+			</h1>
+			<div class="relative flex items-center gap-4">
+				<StatusBadge status={project.status} />
+				{@render datePicker()}
+			</div>
+			<h1 class="mt-8 mb-2 text-xl font-bold">Notes</h1>
+			<Editor content={JSON.stringify(project.note?.content ?? '')} projectId={project.id} />
+		</section>
+	{/if}
+{/await}
 
 <form use:enhance id="dateForm" action="?/setDate" hidden method="post">
 	<input bind:value={$form.date} name="date" />

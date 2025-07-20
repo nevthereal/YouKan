@@ -28,6 +28,9 @@ export const getProject = query(z.number(), async (id: number) => {
 		where: {
 			ownerId: user.id,
 			id
+		},
+		with: {
+			note: true
 		}
 	});
 	return project;

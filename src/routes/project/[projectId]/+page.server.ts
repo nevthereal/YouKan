@@ -10,29 +10,7 @@ import { project } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const user = getUser();
-
-	const id = checkId(params.projectId);
-
-	const project = await db.query.project.findFirst({
-		where: {
-			ownerId: user.id,
-			id
-		},
-		with: {
-			note: true
-		}
-	});
-
-	if (!project) return error(404);
-
-	const dateForm = await superValidate(zod(zSetDate), {
-		defaults: {
-			date: project.date ?? new Date()
-		}
-	});
-
-	return { project, dateForm };
+	return { projectId: params.projectId };
 };
 
 export const actions = {
