@@ -22,6 +22,17 @@ export const getProjects = query(async () => {
 	return projects;
 });
 
+export const getProject = query(z.number(), async (id: number) => {
+	const user = getUser();
+	const project = await db.query.project.findFirst({
+		where: {
+			ownerId: user.id,
+			id
+		}
+	});
+	return project;
+});
+
 export const statusVals = query(async () => {
 	return projectStatusEnum.enumValues;
 });
@@ -48,10 +59,11 @@ export const editProject = form(async (data: FormData) => {
 
 	// check values
 	const values = {
-		projectId: data.get('id'),
+		projectId: Number(data.get('id')),
 		title: data.get('title')
 	};
 	const result = zEditProject.safeParse(values);
+
 	if (!result.success) return { errors: result.error.flatten().fieldErrors };
 
 	const { title, projectId } = result.data;

@@ -68,8 +68,15 @@
 			</div>
 		{:else}
 			<form
-				{...editProject.enhance(async ({ submit }) => {
-					submit();
+				{...editProject.enhance(async ({ submit, data }) => {
+					submit().updates(
+						getProjects().withOverride((p) =>
+							p.map((prj) =>
+								prj.id === prj.id ? { ...prj, title: data.get('title') as string } : prj
+							)
+						)
+					);
+					edit = false;
 				})}
 				class="flex"
 			>
