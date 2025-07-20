@@ -103,7 +103,11 @@
 												updateDate({
 													newDate: date.toDate(getLocalTimeZone()),
 													projectId: project.id
-												}).updates(getProject(project.id));
+												}).updates(
+													getProject(project.id).withOverride((p) =>
+														p ? { ...p, date: date.toDate(getLocalTimeZone()) } : undefined
+													)
+												);
 											}}
 											class="bg-dark rounded-button mt-4 w-full p-2 text-center text-white"
 											>Update</button
