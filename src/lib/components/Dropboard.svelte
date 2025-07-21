@@ -13,7 +13,7 @@
 
 		if (!targetContainer) return;
 
-		drop({ id: draggedItem.id, target: targetContainer }).updates(
+		drop({ id: draggedItem.id, target: targetContainer as (typeof STATUS_VALUES)[number] }).updates(
 			getProjects().withOverride((projects) =>
 				projects.map((proj) =>
 					proj.id === draggedItem.id

@@ -2,8 +2,6 @@
 	import { draggable } from '@thisux/sveltednd';
 	import { fade } from 'svelte/transition';
 	import { type Project, type Status } from '$lib/server/db/schema/project.sql';
-	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import type { zNewProject } from '$lib/zod';
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { prettyDate } from '$lib/utils';
 	import { deleteProject, editProject, getProjects } from '$lib/projects.remote';
@@ -37,7 +35,7 @@
 				console.log(e.invalidDrop);
 			}
 		},
-		interactive: ['a', 'button']
+		interactive: ['#notes', '#delete']
 	}}
 	in:fade={{ duration: 150 }}
 	out:fade={{ duration: 150 }}
@@ -51,6 +49,7 @@
 				</h2>
 				<div class="flex gap-1">
 					<a
+						id="notes"
 						title="Notes"
 						aria-label="Notes"
 						href="/project/{prj.id}"
@@ -60,6 +59,7 @@
 						onclick={async () => {
 							await deleteProject(prj.id).updates(getProjects());
 						}}
+						id="delete"
 						title="Delete"
 						aria-label="Delete"
 						class="invisible group-hover:visible hover:text-red-500"><Trash2 size={20} /></button
