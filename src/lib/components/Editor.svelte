@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { saveNote } from '$lib/notes.remote';
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import type { Action } from 'svelte/action';
@@ -11,26 +12,12 @@
 	let { content, projectId }: Props = $props();
 	let editorState = $state() as Editor;
 
-	const saveNote = () => {
-		fetch(`/api/notes/?id=${projectId}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(editorState.getJSON())
-		})
-			.catch(error => {
-				console.error('Failed to save note:', error);
-				// Consider adding user notification here
-			});
-	};
-
 	let saveTimeout: ReturnType<typeof setTimeout>;
 	const SAVE_DELAY = 1000; // 1 second delay
 
 	const debouncedSave = () => {
 		clearTimeout(saveTimeout);
-		saveTimeout = setTimeout(saveNote, SAVE_DELAY);
+		saveTimeout = setTimeout(async () => await saveNote({ editorState, projectId }), SAVE_DELAY);
 	};
 
 	$effect(() => {
@@ -65,15 +52,15 @@
 
 			return () => {
 				editorState.destroy();
-return () => {
-	editorState.destroy();
-	if (editorState.isEmpty) return;
-	try {
-		saveNote();
-	} catch (e) {
-		console.error('Failed to save note during cleanup:', e);
-	}
-};
+				return () => {
+					editorState.destroy();
+					if (editorState.isEmpty) return;
+					try {
+						saveNote({ editorState, projectId });
+					} catch (e) {
+						console.error('Failed to save note during cleanup:', e);
+					}
+				};
 			};
 		});
 	};

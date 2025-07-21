@@ -2,17 +2,15 @@
 	import Editor from '$lib/components/Editor.svelte';
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
 	import { prettyDate } from '$lib/utils';
-	import { getLocalTimeZone, parseDateTime, today, type DateValue } from '@internationalized/date';
+	import { getLocalTimeZone, today } from '@internationalized/date';
 	import { DatePicker } from 'bits-ui';
 	import { Calendar, ChevronLeft, ChevronRight, Loader2, Trash2 } from 'lucide-svelte';
-	import { superForm } from 'sveltekit-superforms';
 	import { updateDate, clearDate, getProject } from '$lib/projects.remote';
 
 	let { data } = $props();
 
 	let date = $state(today(getLocalTimeZone()));
 	let modalOpen = $state(false);
-	let isLoading = $state(false);
 </script>
 
 {#await getProject(Number(data.projectId))}
@@ -100,25 +98,19 @@
 									</div>
 									<div class="flex gap-2">
 										<button
-											disabled={isLoading}
 											onclick={async () => {
-												isLoading = true;
 												updateDate({
 													newDate: date.toDate(getLocalTimeZone()),
 													projectId: project.id
-												})
-													.updates(
-														getProject(project.id).withOverride((p) =>
-															p ? { ...p, date: date.toDate(getLocalTimeZone()) } : undefined
-														)
+												}).updates(
+													getProject(project.id).withOverride((p) =>
+														p ? { ...p, date: date.toDate(getLocalTimeZone()) } : undefined
 													)
-													.finally(() => (isLoading = false));
+												);
 											}}
 											class="bg-dark disabled:bg-dark/50 rounded-button mt-4 flex w-full justify-center gap-4 p-2 text-center text-white"
-											>Update {#if isLoading}
-												<Loader2 class="animate-spin" />
-											{/if}</button
-										>
+											>Update
+										</button>
 										{#if project.date}
 											<button
 												class="rounded-button mt-4 bg-red-400 p-2 text-center text-white"

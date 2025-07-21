@@ -1,46 +1,6 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { invalidateAll } from '$app/navigation';
-	import type { Project } from '$lib/server/db/schema/project.sql.js';
-	import { droppable, type DragDropState, type DragDropAttributes } from '@thisux/sveltednd';
-	import { cn, STATUS_VALUES } from '$lib/utils';
-	import { Plus } from 'lucide-svelte';
-	import ProjectCard from '$lib/components/ProjectCard.svelte';
-	import { type Status } from '$lib/server/db/schema/project.sql';
-	import { drop, getProjects, newProject } from '$lib/projects.remote.js';
-	import z from 'zod';
-
-	async function handleDrop(state: DragDropState<Project>) {
-		const { draggedItem, targetContainer } = state;
-
-		if (!targetContainer) return;
-
-		drop({ id: draggedItem.id, target: targetContainer }).updates(
-			getProjects().withOverride((projects) =>
-				projects.map((proj) =>
-					proj.id === draggedItem.id ? { ...proj, status: targetContainer as Status[number] } : proj
-				)
-			)
-		);
-	}
-
-	let newItem = $state(false);
-
-	$effect(() => {
-		const handleKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape' && newItem === true) {
-				newItem = false;
-			}
-		};
-
-		document.addEventListener('keydown', handleKeydown);
-
-		return () => {
-			document.removeEventListener('keydown', handleKeydown);
-		};
-	});
-
-	let newInput = $state() as HTMLInputElement;
+	import { STATUS_VALUES } from '$lib/utils';
+	import Dropboard from '$lib/components/Dropboard.svelte';
 </script>
 
 <section>
@@ -48,7 +8,14 @@
 		<h1 class="text-2xl font-bold">Board View</h1>
 		<p>Drag and drop projects.</p>
 	</div>
-	<svelte:boundary>
+	<div class="no-scrollbar flex gap-6 overflow-x-scroll p-2">
+		{#each STATUS_VALUES as val}
+			<div class="w-80 flex-none">
+				<Dropboard statusValue={val} />
+			</div>
+		{/each}
+	</div>
+	<!-- <svelte:boundary>
 		{#await getProjects()}
 			<p>Loading</p>
 		{:then projects}
@@ -124,5 +91,5 @@
 				{/each}
 			</div>
 		{/await}
-	</svelte:boundary>
+	</svelte:boundary> -->
 </section>

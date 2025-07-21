@@ -6,6 +6,7 @@ import { error } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { zEditProject, zNewProject } from './zod';
+// import { STATUS_VALUES } from './utils';
 
 export const getProjects = query(async () => {
 	const user = getUser();
