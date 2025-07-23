@@ -4,7 +4,7 @@ export const zNewProject = z.object({
 	title: z.string().min(3)
 });
 export const zEditProject = z.object({
-	title: z.string().min(3),
+	newTitle: z.string().min(3),
 	projectId: z.number()
 });
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Toaster } from 'svelte-sonner';
 	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
 	import { LogOut } from 'lucide-svelte';
@@ -7,6 +8,8 @@
 
 	let { children, data } = $props();
 </script>
+
+<Toaster />
 
 <nav class="flex items-center justify-between p-8">
 	<a href={data.globalUser != null ? '/' : '/home'} class="text-5xl font-black italic">YK</a>

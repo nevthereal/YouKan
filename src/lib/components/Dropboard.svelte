@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { toast } from 'svelte-sonner';
 	import { drop, getProjects, newProject } from '$lib/projects.remote';
 	import type { Project } from '$lib/server/db/schema';
 	import { cn, type STATUS_VALUES } from '$lib/utils';
@@ -81,16 +82,19 @@
 				<p class="font-mono italic">Loading "{statusValue}" projects...</p>
 			{/snippet}
 			{#each (await getProjects()).filter((p) => p.status === statusValue) as prj (prj.id)}
-				<ProjectCard {prj} status={statusValue} />
+				<ProjectCard project={prj} status={statusValue} />
 			{/each}
 		</svelte:boundary>
 		{#if statusValue === 'To Do'}
 			{#if newItem}
 				<form
 					{...newProject.enhance(async ({ submit }) => {
-						submit().updates(getProjects());
-
-						newItem = false;
+						try {
+							submit().updates(getProjects());
+							newItem = false;
+						} catch (e) {
+							toast.error(e as string);
+						}
 					})}
 				>
 					<input

@@ -50,6 +50,12 @@ importers:
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
+      svelte-checkmate:
+        specifier: ^0.0.1
+        version: 0.0.1(svelte@5.36.8)(zod@3.25.76)
+      svelte-sonner:
+        specifier: ^1.0.5
+        version: 1.0.5(svelte@5.36.8)
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.5
@@ -2643,6 +2649,11 @@ packages:
     peerDependencies:
       svelte: ^5.7.0
 
+  runed@0.28.0:
+    resolution: {integrity: sha512-k2xx7RuO9hWcdd9f+8JoBeqWtYrm5CALfgpkg2YDB80ds/QE4w0qqu34A7fqiAwiBBSBQOid7TLxwxVC27ymWQ==}
+    peerDependencies:
+      svelte: ^5.7.0
+
   sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
@@ -2732,6 +2743,12 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
+  svelte-checkmate@0.0.1:
+    resolution: {integrity: sha512-vyE0YAl6u4x9dL+AhGQhhOfFcFJWy6hcoYjR2HqA8tKlaya0LvcB3Lj1Ei96ple74KLQuOB2fOpMwbYrF9RKDg==}
+    peerDependencies:
+      svelte: ^5.0.0
+      zod: ^3.25.0 || ^4.0.0
+
   svelte-eslint-parser@0.43.0:
     resolution: {integrity: sha512-GpU52uPKKcVnh8tKN5P4UZpJ/fUDndmq7wfsvoVXsyP+aY0anol7Yqo01fyrlaWGMFfm4av5DyrjlaXdLRJvGA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -2745,6 +2762,11 @@ packages:
     resolution: {integrity: sha512-T6mqZrySltPCDwfKXWQ6zehipVLk4GWfH1zCMGgRtLlOIFPuw58ZxVYxVvotMJgJaurKi1i14viB2GIRKXeJTQ==}
     peerDependencies:
       svelte: ^3.0.0 || ^4.0.0 || ^5.0.0-next.1
+
+  svelte-sonner@1.0.5:
+    resolution: {integrity: sha512-9dpGPFqKb/QWudYqGnEz93vuY+NgCEvyNvxoCLMVGw6sDN/3oVeKV1xiEirW2E1N3vJEyj5imSBNOGltQHA7mg==}
+    peerDependencies:
+      svelte: ^5.0.0
 
   svelte-toolbelt@0.7.1:
     resolution: {integrity: sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ==}
@@ -3046,10 +3068,8 @@ snapshots:
   '@ark/schema@0.46.0':
     dependencies:
       '@ark/util': 0.46.0
-    optional: true
 
-  '@ark/util@0.46.0':
-    optional: true
+  '@ark/util@0.46.0': {}
 
   '@babel/runtime@7.26.9':
     dependencies:
@@ -4241,7 +4261,6 @@ snapshots:
     dependencies:
       '@ark/schema': 0.46.0
       '@ark/util': 0.46.0
-    optional: true
 
   asn1js@3.0.5:
     dependencies:
@@ -5327,6 +5346,11 @@ snapshots:
       esm-env: 1.2.2
       svelte: 5.36.8
 
+  runed@0.28.0(svelte@5.36.8):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.36.8
+
   sade@1.8.1:
     dependencies:
       mri: 1.2.0
@@ -5435,6 +5459,13 @@ snapshots:
     transitivePeerDependencies:
       - picomatch
 
+  svelte-checkmate@0.0.1(svelte@5.36.8)(zod@3.25.76):
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      arktype: 2.1.20
+      svelte: 5.36.8
+      zod: 3.25.76
+
   svelte-eslint-parser@0.43.0(svelte@5.36.8):
     dependencies:
       eslint-scope: 7.2.2
@@ -5447,6 +5478,11 @@ snapshots:
 
   svelte-parse-markup@0.1.5(svelte@5.36.8):
     dependencies:
+      svelte: 5.36.8
+
+  svelte-sonner@1.0.5(svelte@5.36.8):
+    dependencies:
+      runed: 0.28.0(svelte@5.36.8)
       svelte: 5.36.8
 
   svelte-toolbelt@0.7.1(svelte@5.36.8):

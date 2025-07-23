@@ -5,13 +5,14 @@
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { prettyDate } from '$lib/utils';
 	import { deleteProject, editProject, getProjects } from '$lib/projects.remote';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
-		prj: Project;
+		project: Project;
 		status: Status[number];
 	}
 
-	let { prj, status }: Props = $props();
+	let { project, status }: Props = $props();
 	let edit = $state(false);
 
 	let input = $state() as HTMLInputElement;
@@ -29,7 +30,7 @@
 	use:draggable={{
 		disabled: edit,
 		container: status,
-		dragData: prj,
+		dragData: project,
 		callbacks: {
 			onDrop: (e) => {
 				console.log(e.invalidDrop);
@@ -45,19 +46,28 @@
 		{#if !edit}
 			<div class="flex items-center justify-between">
 				<h2 class="text-xl font-bold">
-					{prj.title}
+					{project.title}
 				</h2>
 				<div class="flex gap-1">
 					<a
 						id="notes"
 						title="Notes"
 						aria-label="Notes"
-						href="/project/{prj.id}"
+						href="/project/{project.id}"
 						class="invisible group-hover:visible"><Sticker size={20} /></a
 					>
 					<button
 						onclick={async () => {
-							await deleteProject(prj.id).updates(getProjects());
+							toast.promise(
+								deleteProject(project.id).updates(
+									getProjects().withOverride((p) => p.filter((prj) => prj.id !== project.id))
+								),
+								{
+									loading: 'Deleting project...',
+									success: `${project.title} deleted`,
+									error: 'Failed to delete project'
+								}
+							);
 						}}
 						id="delete"
 						title="Delete"
@@ -83,13 +93,13 @@
 				class="flex"
 			>
 				<input
-					defaultValue={prj.title}
+					defaultValue={project.title}
 					bind:this={input}
 					name="title"
 					class="w-full text-xl outline-none"
 					type="text"
 				/>
-				<input type="hidden" value={prj.id} name="id" />
+				<input type="hidden" value={project.id} name="id" />
 				<div class="flex gap-1">
 					<button type="button" class="opacity-50" onclick={() => (edit = false)}
 						><XCircle /></button
@@ -98,9 +108,9 @@
 				</div>
 			</form>
 		{/if}
-		{#if prj.date}
+		{#if project.date}
 			<h3>
-				{prettyDate(prj.date, 'medium')}
+				{prettyDate(project.date, 'medium')}
 			</h3>
 		{/if}
 	</div>
