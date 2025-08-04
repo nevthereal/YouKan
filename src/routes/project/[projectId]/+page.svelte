@@ -7,13 +7,13 @@
 	import { Calendar, ChevronLeft, ChevronRight, Loader2, Trash2 } from 'lucide-svelte';
 	import { updateDate, clearDate, getProject } from '$lib/projects.remote';
 
-	let { data } = $props();
+	let { params } = $props();
 
 	let date = $state(today(getLocalTimeZone()));
 	let modalOpen = $state(false);
 </script>
 
-{#await getProject(Number(data.projectId))}
+{#await getProject(Number(params.projectId))}
 	<p>Loading...</p>
 {:then project}
 	{#if project}
