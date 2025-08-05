@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Toucan from '$lib/assets/toucan.png?enhanced';
+
+	let { data } = $props();
 </script>
 
 <h1>Hi</h1>
