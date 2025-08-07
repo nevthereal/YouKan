@@ -60,14 +60,16 @@ export const newProject = form(async (formData) => {
 	return { success: true, title: result.data.title };
 });
 
-export const editProject = form(async (formData) => {
+export const renameProject = form(async (formData) => {
 	const user = await getUser();
 
 	const result = await validator({ schema: zEditProject, formData });
 
-	if (!result.success) return error(400, result.errors.newTitle);
+	console.log(result);
 
-	const { newTitle, projectId } = result.data;
+	if (!result.success) return error(400, result.errors.title);
+
+	const { title, projectId } = result.data;
 
 	// query db to check if record exists
 	const record = await db.query.project.findFirst({
@@ -82,10 +84,10 @@ export const editProject = form(async (formData) => {
 	await db
 		.update(project)
 		.set({
-			title: newTitle
+			title
 		})
 		.where(eq(project.id, projectId));
-	return { success: true, title: newTitle };
+	return { success: true, title };
 });
 
 export const updateDate = command(

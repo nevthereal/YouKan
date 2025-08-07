@@ -4,7 +4,7 @@
 	import { type Project, type Status } from '$lib/server/db/schema/project.sql';
 	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
 	import { prettyDate } from '$lib/utils';
-	import { deleteProject, editProject, getProjects } from '$lib/projects.remote';
+	import { deleteProject, renameProject, getProjects } from '$lib/projects.remote';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
@@ -78,11 +78,11 @@
 			</div>
 		{:else}
 			<form
-				{...editProject.enhance(async ({ submit, data }) => {
+				{...renameProject.enhance(async ({ submit, data }) => {
 					submit().updates(
 						getProjects().withOverride((p) =>
 							p.map((prj) =>
-								prj.id === Number(data.get('id'))
+								prj.id === Number(data.get('projectId'))
 									? { ...prj, title: data.get('title') as string }
 									: prj
 							)
@@ -99,7 +99,7 @@
 					class="w-full text-xl outline-none"
 					type="text"
 				/>
-				<input type="hidden" value={project.id} name="id" />
+				<input type="hidden" value={project.id} name="projectId" />
 				<div class="flex gap-1">
 					<button type="button" class="opacity-50" onclick={() => (edit = false)}
 						><XCircle /></button
