@@ -150,4 +150,6 @@ export const deleteProject = command(z.number(), async (id) => {
 	if (!qProject) return error(404, 'Project not found or permission denied');
 
 	await db.delete(project).where(eq(project.id, qProject.id));
+
+	return { title: qProject.title };
 });

@@ -2,10 +2,11 @@
 	import { draggable } from '@thisux/sveltednd';
 	import { fade } from 'svelte/transition';
 	import { type Project, type Status } from '$lib/server/db/schema/project.sql';
-	import { CheckCircle2, Sticker, Trash2, XCircle } from 'lucide-svelte';
+	import { CheckCircle2, XCircle } from 'lucide-svelte';
 	import { prettyDate } from '$lib/utils';
-	import { deleteProject, renameProject, getProjects } from '$lib/projects.remote';
-	import { toast } from 'svelte-sonner';
+	import { renameProject, getProjects } from '$lib/projects.remote';
+	import ProjectInfo from './ProjectInfo.svelte';
+	import ProjectDelete from './ProjectDelete.svelte';
 
 	interface Props {
 		project: Project;
@@ -36,7 +37,7 @@
 				console.log(e.invalidDrop);
 			}
 		},
-		interactive: ['#notes', '#delete']
+		interactive: ['button']
 	}}
 	in:fade={{ duration: 150 }}
 	out:fade={{ duration: 150 }}
@@ -49,31 +50,8 @@
 					{project.title}
 				</h2>
 				<div class="flex gap-1">
-					<a
-						id="notes"
-						title="Notes"
-						aria-label="Notes"
-						href="/project/{project.id}"
-						class="invisible group-hover:visible"><Sticker size={20} /></a
-					>
-					<button
-						onclick={async () => {
-							toast.promise(
-								deleteProject(project.id).updates(
-									getProjects().withOverride((p) => p.filter((prj) => prj.id !== project.id))
-								),
-								{
-									loading: 'Deleting project...',
-									success: `${project.title} deleted`,
-									error: 'Failed to delete project'
-								}
-							);
-						}}
-						id="delete"
-						title="Delete"
-						aria-label="Delete"
-						class="invisible group-hover:visible hover:text-red-500"><Trash2 size={20} /></button
-					>
+					<ProjectInfo projectId={project.id} />
+					<ProjectDelete projectId={project.id} />
 				</div>
 			</div>
 		{:else}
@@ -102,9 +80,9 @@
 				<input type="hidden" value={project.id} name="projectId" />
 				<div class="flex gap-1">
 					<button type="button" class="opacity-50" onclick={() => (edit = false)}
-						><XCircle /></button
+						><XCircle class="active:scale-98" /></button
 					>
-					<button type="submit"><CheckCircle2 /></button>
+					<button type="submit"><CheckCircle2 class="active:scale-98" /></button>
 				</div>
 			</form>
 		{/if}

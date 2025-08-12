@@ -85,12 +85,17 @@
 			{#if statusValue === 'To Do'}
 				{#if newItem}
 					<form
-						{...newProject.enhance(async ({ submit }) => {
+						{...newProject.enhance(async ({ submit, data }) => {
 							try {
-								submit().updates(getProjects());
 								newItem = false;
+
+								toast.promise(() => submit().updates(getProjects()), {
+									loading: `Creating project`,
+									success: `${data.get('title')} created`,
+									error: 'Failed to create project'
+								});
 							} catch (e) {
-								toast.error(e as string);
+								console.error(e);
 							}
 						})}
 					>
