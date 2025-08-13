@@ -8,7 +8,7 @@
 
 	let { children } = $props();
 
-	const user = authClient(page.url.origin).getSession();
+	const session = authClient(page.url.origin).getSession();
 </script>
 
 <Toaster />
@@ -18,8 +18,8 @@
 		{#snippet pending()}
 			<p class="text-5xl font-black italic">YK</p>
 		{/snippet}
-		<a href={(await user) != null ? '/' : '/home'} class="text-5xl font-black italic">YK</a>
-		{#if await user}
+		<a href={(await session).data != null ? '/' : '/home'} class="text-5xl font-black italic">YK</a>
+		{#if (await session).data != null}
 			<button
 				onclick={async () => {
 					await authClient(page.url.origin)
