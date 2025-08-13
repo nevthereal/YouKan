@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { clearDate, getProject, updateDate } from '$lib/projects.remote';
-	// import { DatePicker, Dialog, Separator } from 'bits-ui';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Calendar } from '$lib/components/ui/calendar';
 	import StatusBadge from './StatusBadge.svelte';
 	import { getLocalTimeZone, today, type DateValue, DateFormatter } from '@internationalized/date';
 	import { cn } from '$lib/utils';
-	import { Sticker, X, Calendar as CalendarIcon } from 'lucide-svelte';
+	import { Sticker, Calendar as CalendarIcon } from 'lucide-svelte';
 	import Button from './ui/button/button.svelte';
 
 	let { projectId }: { projectId: number } = $props();
@@ -16,7 +15,7 @@
 		dateStyle: 'long'
 	});
 
-	let value = $state<DateValue>();
+	let date = $state<DateValue>(today(getLocalTimeZone()));
 </script>
 
 <Dialog.Root open>
@@ -35,7 +34,7 @@
 				<p>Loading...</p>
 			{:then project}
 				{#if project}
-					<section class="px-8">
+					<section>
 						<h1 class="mb-4 text-5xl font-bold">
 							{project.title}
 						</h1>
@@ -48,29 +47,43 @@
 											variant="outline"
 											class={cn(
 												'w-[280px] justify-start text-left font-normal',
-												!value && 'text-muted-foreground'
+												!date && 'text-muted-foreground'
 											)}
 											{...props}
 										>
 											<CalendarIcon class="mr-2 size-4" />
-											{value ? df.format(value.toDate(getLocalTimeZone())) : 'Select a date'}
+											{date ? df.format(date.toDate(getLocalTimeZone())) : 'Select a date'}
 										</Button>
 									{/snippet}
 								</Popover.Trigger>
-								<Popover.Content class="w-auto p-0">
+								<Popover.Content class="flex w-auto flex-col items-center p-2">
 									<Calendar
 										onValueChange={(v) => {
 											if (v)
-												updateDate({ newDate: v.toDate(getLocalTimeZone()), projectId }).updates(
+												updateDate({
+													newDate: v.toDate(getLocalTimeZone()),
+													projectId: project.id
+												}).updates(
 													getProject(project.id).withOverride((p) =>
 														p ? { ...p, date: date.toDate(getLocalTimeZone()) } : undefined
 													)
 												);
 										}}
-										bind:value
+										bind:value={date}
 										type="single"
 										initialFocus
 									/>
+									{#if project.date}
+										<Button
+											onclick={async () =>
+												await clearDate(project.id).updates(
+													getProject(project.id).withOverride((p) =>
+														p ? { ...p, date: null } : undefined
+													)
+												)}
+											variant="destructive">Clear Date</Button
+										>
+									{/if}
 								</Popover.Content>
 							</Popover.Root>
 						</div>
