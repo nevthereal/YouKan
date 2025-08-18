@@ -50,7 +50,7 @@
 					{project.title}
 				</h2>
 				<div class="flex gap-1">
-					<ProjectInfo projectId={project.id} />
+					<ProjectInfo {project} />
 					<ProjectDelete projectId={project.id} />
 				</div>
 			</div>

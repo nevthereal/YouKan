@@ -22,12 +22,7 @@
 </script>
 
 <Dialog.Root>
-	<Dialog.Trigger
-		onclick={() => console.log('should open')}
-		title="Delete"
-		id="notes"
-		class="invisible group-hover:visible active:scale-98"
-	>
+	<Dialog.Trigger title="Delete" id="notes" class="invisible group-hover:visible active:scale-98">
 		<Trash2 size={20} />
 	</Dialog.Trigger>
 	<Dialog.Portal>
