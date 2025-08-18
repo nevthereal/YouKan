@@ -18,7 +18,7 @@
 	let date = $state<DateValue>(today(getLocalTimeZone()));
 </script>
 
-<Dialog.Root open>
+<Dialog.Root>
 	<Dialog.Trigger
 		title="Project Info"
 		id="notes"
