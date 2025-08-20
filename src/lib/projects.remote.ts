@@ -42,6 +42,7 @@ export const getProject = query(z.number(), async (id: number) => {
 			note: true
 		}
 	});
+
 	return project;
 });
 

@@ -80,9 +80,9 @@
 				<input type="hidden" value={project.id} name="projectId" />
 				<div class="flex gap-1">
 					<button type="button" class="opacity-50" onclick={() => (edit = false)}
-						><XCircle class="active:scale-98" /></button
+						><XCircle class="active:scale-98" size={20} /></button
 					>
-					<button type="submit"><CheckCircle2 class="active:scale-98" /></button>
+					<button type="submit"><CheckCircle2 class="active:scale-98" size={20} /></button>
 				</div>
 			</form>
 		{/if}

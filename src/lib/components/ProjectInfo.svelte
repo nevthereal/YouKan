@@ -1,10 +1,16 @@
 <script lang="ts">
-	import { clearDate, getProject, updateDate } from '$lib/projects.remote';
+	import { clearDate, getProject, getProjects, updateDate } from '$lib/projects.remote';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Popover from '$lib/components/ui/popover';
 	import { Calendar } from '$lib/components/ui/calendar';
 	import StatusBadge from './StatusBadge.svelte';
-	import { getLocalTimeZone, today, type DateValue, DateFormatter } from '@internationalized/date';
+	import {
+		getLocalTimeZone,
+		today,
+		type DateValue,
+		DateFormatter,
+		parseAbsolute
+	} from '@internationalized/date';
 	import { cn } from '$lib/utils';
 	import { Sticker, Calendar as CalendarIcon, Trash2 } from 'lucide-svelte';
 	import Button from './ui/button/button.svelte';
@@ -16,7 +22,11 @@
 		dateStyle: 'long'
 	});
 
-	let date = $state<DateValue>(today(getLocalTimeZone()));
+	let date = $state<DateValue>(
+		project.date
+			? parseAbsolute(project.date.toISOString(), getLocalTimeZone())
+			: today(getLocalTimeZone())
+	);
 </script>
 
 <Dialog.Root>
@@ -65,7 +75,8 @@
 										}).updates(
 											getProject(project.id).withOverride((p) =>
 												p ? { ...p, date: date.toDate(getLocalTimeZone()) } : undefined
-											)
+											),
+											getProjects()
 										)}>Update</Button
 								>
 								{#if project.date}

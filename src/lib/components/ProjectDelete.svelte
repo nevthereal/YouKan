@@ -27,13 +27,13 @@
 	</Dialog.Trigger>
 	<Dialog.Portal>
 		<Dialog.Overlay />
-		<Dialog.Content>
-			<Dialog.Title>Delete project?</Dialog.Title>
+		<Dialog.Content class="w-min" showCloseButton={false}>
+			<Dialog.Title class="mx-auto text-2xl">Delete project?</Dialog.Title>
 			<div class="flex gap-2">
 				<Dialog.Close class={buttonVariants({ variant: 'destructive' })} onclick={handleDelete}
 					>Yeah</Dialog.Close
 				>
-				<Dialog.Close class={buttonVariants({})}>Nevermind</Dialog.Close>
+				<Dialog.Close class={buttonVariants({ variant: 'secondary' })}>Nevermind</Dialog.Close>
 			</div>
 		</Dialog.Content>
 	</Dialog.Portal>
