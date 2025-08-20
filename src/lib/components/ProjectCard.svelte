@@ -41,7 +41,7 @@
 	}}
 	in:fade={{ duration: 150 }}
 	out:fade={{ duration: 150 }}
-	class="bg-dark/10 rounded-card w-full cursor-move border-2 p-4 text-left transition-all duration-200"
+	class="bg-dark/10 w-full cursor-move rounded-xl border-2 p-4 text-left transition-all duration-200"
 >
 	<div class="group flex flex-col gap-2">
 		{#if !edit}

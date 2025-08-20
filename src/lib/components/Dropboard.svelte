@@ -46,7 +46,7 @@
 
 <div
 	class={cn(
-		'no-scrollbar rounded-card overflow-scroll border-2 p-4',
+		'no-scrollbar w-full overflow-scroll rounded-xl border-2 p-4',
 		statusValue === 'To Do'
 			? 'bg-todo/35'
 			: statusValue === 'Re Record'
@@ -101,7 +101,7 @@
 					>
 						<input
 							bind:this={newInput}
-							class="bg-dark/10 rounded-card w-full border-2 p-4 text-xl font-bold"
+							class="bg-dark/10 w-full rounded-xl border-2 p-4 text-xl font-bold"
 							type="text"
 							name="title"
 							placeholder="New Project"
@@ -115,7 +115,7 @@
 							newInput.focus();
 						}, 20);
 					}}
-					class="bg-dark/10 rounded-input flex w-full items-center justify-center gap-2 border-2 p-2 text-lg font-bold"
+					class="bg-dark/10 flex w-full items-center justify-center gap-2 rounded-lg border-2 p-2 text-lg font-bold"
 					><Plus size={20} />New Item</button
 				>{/if}
 		</div>

@@ -4,15 +4,13 @@
 </script>
 
 <section>
-	<div class="mb-4">
-		<h1 class="text-2xl font-bold">Board View</h1>
+	<div class="mb-4 px-4 text-center">
+		<h1 class="text-3xl font-bold">Board View</h1>
 		<p>Drag and drop projects.</p>
 	</div>
-	<div class="no-scrollbar flex gap-6 overflow-x-scroll p-2">
+	<div class="flex justify-evenly gap-6 px-8 max-lg:flex-col">
 		{#each STATUS_VALUES as val}
-			<div class="w-80 flex-none">
-				<Dropboard statusValue={val} />
-			</div>
+			<Dropboard statusValue={val} />
 		{/each}
 	</div>
 </section>

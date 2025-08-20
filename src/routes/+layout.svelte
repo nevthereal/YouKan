@@ -5,6 +5,7 @@
 	import { LogOut } from 'lucide-svelte';
 	import '../app.css';
 	import { goto } from '$app/navigation';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	let { children } = $props();
 
@@ -20,18 +21,17 @@
 		{/snippet}
 		<a href={(await session).data != null ? '/' : '/home'} class="text-5xl font-black italic">YK</a>
 		{#if (await session).data != null}
-			<button
+			<Button
+				size="lg"
 				onclick={async () => {
 					await authClient(page.url.origin)
 						.signOut()
 						.then(() => goto('/login'));
-				}}
-				class="rounded-button flex items-center gap-2 border-2 p-2 text-sm font-bold"
-				><LogOut size={20} /> Sign Out</button
+				}}><LogOut size={20} /> Sign Out</Button
 			>
 		{/if}
 	</svelte:boundary>
 </nav>
-<main class="px-8 pb-8">
+<main class="max-w-full overflow-x-hidden">
 	{@render children()}
 </main>
