@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Toaster } from 'svelte-sonner';
-	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
 	import { LogOut } from 'lucide-svelte';
 	import '../app.css';
@@ -9,7 +8,7 @@
 
 	let { children } = $props();
 
-	const session = authClient(page.url.origin).getSession();
+	const session = authClient.getSession();
 </script>
 
 <Toaster />
@@ -24,9 +23,7 @@
 			<Button
 				size="lg"
 				onclick={async () => {
-					await authClient(page.url.origin)
-						.signOut()
-						.then(() => goto('/login'));
+					await authClient.signOut().then(() => goto('/login'));
 				}}><LogOut size={20} /> Sign Out</Button
 			>
 		{/if}

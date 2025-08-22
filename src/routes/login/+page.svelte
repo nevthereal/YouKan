@@ -1,5 +1,4 @@
 <script>
-	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { DoorOpen } from 'lucide-svelte';
@@ -9,7 +8,7 @@
 	variant="outline"
 	size="lg"
 	onclick={async () => {
-		await authClient(page.url.origin).signIn.social({
+		await authClient.signIn.social({
 			provider: 'github',
 			callbackURL: '/'
 		});
