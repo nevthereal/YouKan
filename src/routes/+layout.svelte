@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { Toaster } from 'svelte-sonner';
-	import { authClient } from '$lib/auth-client';
-	import { LogOut } from 'lucide-svelte';
+	import { DoorOpen, LogOut } from 'lucide-svelte';
 	import '../app.css';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { authClient } from '$lib/auth-client';
+	import { getUser } from '$lib/projects.remote';
 
 	let { children } = $props();
-
-	const session = authClient.getSession();
 </script>
 
 <Toaster />
@@ -18,13 +17,24 @@
 		{#snippet pending()}
 			<p class="text-5xl font-black italic">YK</p>
 		{/snippet}
-		<a href={(await session).data != null ? '/' : '/home'} class="text-5xl font-black italic">YK</a>
-		{#if (await session).data != null}
+		<a href="/" class="text-5xl font-black italic">YK</a>
+		{#if await getUser()}
 			<Button
 				size="lg"
 				onclick={async () => {
-					await authClient.signOut().then(() => goto('/login'));
+					await authClient.signOut().then(() => getUser().refresh());
 				}}><LogOut size={20} /> Sign Out</Button
+			>
+		{:else}
+			<Button
+				variant="outline"
+				size="lg"
+				onclick={async () => {
+					await authClient.signIn.social({
+						provider: 'github',
+						callbackURL: '/'
+					});
+				}}><DoorOpen /> Sign in with GitHub</Button
 			>
 		{/if}
 	</svelte:boundary>
