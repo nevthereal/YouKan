@@ -20,7 +20,6 @@
 		<a href="/" class="text-5xl font-black italic">YK</a>
 		{#if await getUser()}
 			<Button
-				size="lg"
 				onclick={async () => {
 					await authClient.signOut().then(() => getUser().refresh());
 				}}><LogOut size={20} /> Sign Out</Button
@@ -28,7 +27,6 @@
 		{:else}
 			<Button
 				variant="outline"
-				size="lg"
 				onclick={async () => {
 					await authClient.signIn.social({
 						provider: 'github',

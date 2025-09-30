@@ -91,7 +91,7 @@
 
 								toast.promise(() => submit().updates(getProjects()), {
 									loading: `Creating project`,
-									success: `${data.get('title')} created`,
+									success: `${data.title} created`,
 									error: 'Failed to create project'
 								});
 							} catch (e) {

@@ -48,33 +48,23 @@ export const getProject = query(z.number(), async (id: number) => {
 	return project;
 });
 
-export const newProject = form(async (formData) => {
+export const newProject = form(zNewProject, async ({ title }) => {
 	const user = await getUser();
 	if (!user) return error(401);
 
-	const result = await validator({ schema: zNewProject, formData });
-
-	if (!result.success) return error(400, result.errors.title);
-
 	await db.insert(project).values({
-		title: result.data.title,
+		title,
 		ownerId: user.id
 	});
 
-	return { success: true, title: result.data.title };
+	return { success: true, title };
 });
 
-export const renameProject = form(async (formData) => {
+export const renameProject = form(zEditProject, async (formData) => {
 	const user = await getUser();
 	if (!user) return error(401);
 
-	const result = await validator({ schema: zEditProject, formData });
-
-	console.log(result);
-
-	if (!result.success) return error(400, result.errors.title);
-
-	const { title, projectId } = result.data;
+	const { title, projectId } = formData;
 
 	// query db to check if record exists
 	const record = await db.query.project.findFirst({

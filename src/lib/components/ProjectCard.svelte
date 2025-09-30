@@ -60,9 +60,7 @@
 					submit().updates(
 						getProjects().withOverride((p) =>
 							p.map((prj) =>
-								prj.id === Number(data.get('projectId'))
-									? { ...prj, title: data.get('title') as string }
-									: prj
+								prj.id === Number(data.projectId) ? { ...prj, title: data.title as string } : prj
 							)
 						)
 					);
