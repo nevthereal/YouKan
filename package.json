@@ -24,7 +24,7 @@
 		"@lucide/svelte": "^0.515.0",
 		"@sveltejs/adapter-vercel": "^5.5.2",
 		"@sveltejs/enhanced-img": "^0.4.4",
-		"@sveltejs/kit": "^2.49.5",
+		"@sveltejs/kit": "^2.52.2",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/postcss": "^4.0.8",
 		"@tailwindcss/typography": "^0.5.16",
