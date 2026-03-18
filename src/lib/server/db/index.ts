@@ -1,5 +1,5 @@
 import { defineRelations } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from './schema/index';
 import { DATABASE_URL } from '$env/static/private';
 
