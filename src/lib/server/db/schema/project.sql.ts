@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { user } from './auth.sql';
-import { STATUS_VALUES } from '$lib/utils';
+import { STATUS_VALUES } from '../../../utils';
 
 export const projectStatusEnum = pgEnum('status', STATUS_VALUES);
 
