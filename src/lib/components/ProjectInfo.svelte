@@ -22,10 +22,10 @@
 		dateStyle: 'long'
 	});
 
-	let date = $state<DateValue>(
-		project.date
-			? parseAbsolute(project.date.toISOString(), getLocalTimeZone())
-			: today(getLocalTimeZone())
+	let { date } = $derived(project);
+
+	let transformedDate = $derived<DateValue>(
+		date != null ? parseAbsolute(date.toISOString(), getLocalTimeZone()) : today(getLocalTimeZone())
 	);
 </script>
 
@@ -54,27 +54,29 @@
 									variant="outline"
 									class={cn(
 										'justify-start text-left font-normal',
-										!date && 'text-muted-foreground'
+										!transformedDate && 'text-muted-foreground'
 									)}
 									{...props}
 								>
 									<CalendarIcon class="mr-2 size-4" />
-									{date ? df.format(date.toDate(getLocalTimeZone())) : 'Select a date'}
+									{transformedDate
+										? df.format(transformedDate.toDate(getLocalTimeZone()))
+										: 'Select a date'}
 								</Button>
 							{/snippet}
 						</Popover.Trigger>
 						<Popover.Content class="flex w-auto flex-col items-center p-2">
-							<Calendar bind:value={date} type="single" initialFocus />
+							<Calendar bind:value={transformedDate} type="single" initialFocus />
 							<div class="flex w-full gap-2">
 								<Button
 									class="flex-grow"
 									onclick={async () =>
 										updateDate({
-											newDate: date.toDate(getLocalTimeZone()),
+											newDate: transformedDate.toDate(getLocalTimeZone()),
 											projectId: project.id
 										}).updates(
 											getProject(project.id).withOverride((p) =>
-												p ? { ...p, date: date.toDate(getLocalTimeZone()) } : undefined
+												p ? { ...p, date: transformedDate.toDate(getLocalTimeZone()) } : undefined
 											),
 											getProjects()
 										)}>Update</Button
