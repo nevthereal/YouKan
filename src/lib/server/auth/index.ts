@@ -16,7 +16,10 @@ export const auth = betterAuth({
 			clientSecret: GH_CLIENT_SECRET
 		}
 	},
-	plugins: [multiSession()]
+	plugins: [multiSession()],
+	baseURL: {
+		allowedHosts: ['localhost:*', '*.vercel.app', 'yk.nevthe.dev']
+	}
 });
 
 export type Auth = typeof auth;
